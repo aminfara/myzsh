@@ -1,3 +1,10 @@
+ssh() {
+    command ssh "$@"
+    RESULT=$?
+    [ -f "$HOME/.base16_theme" ] && source "$HOME/.base16_theme"
+    return RESULT
+}
+
 source /usr/local/share/antigen/antigen.zsh
 
 antigen use oh-my-zsh
