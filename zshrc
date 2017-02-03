@@ -5,7 +5,8 @@ ssh() {
     return RESULT
 }
 
-source /usr/local/share/antigen/antigen.zsh
+[ -f /usr/local/share/antigen/antigen.zsh ] && source /usr/local/share/antigen/antigen.zsh
+[ -f ~/.antigen/antigen.zsh ] && source ~/.antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
@@ -14,6 +15,7 @@ antigen bundle ruby
 antigen bundle gem
 antigen bundle python
 antigen bundle pip
+antigen bundle vi-mode
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen theme dst
