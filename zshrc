@@ -19,11 +19,17 @@ antigen bundle python
 antigen bundle pip
 antigen bundle vi-mode
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle spwhitt/nix-zsh-completions
 
 antigen theme dst
 
 antigen apply
+
+# bind UP and DOWN arrow keys
+zmodload zsh/terminfo
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
@@ -35,5 +41,7 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 [ -x "$(command -v pyenv)" ] && eval "$(pyenv init -)"
 
 [ -x "$HOME/.vocab" ] && $HOME/.vocab
+
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 date
