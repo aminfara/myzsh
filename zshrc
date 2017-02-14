@@ -19,6 +19,7 @@ antigen bundle python
 antigen bundle pip
 antigen bundle vi-mode
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle spwhitt/nix-zsh-completions
 
 antigen theme dst
 
