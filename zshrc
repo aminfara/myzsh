@@ -7,8 +7,12 @@ ssh() {
     return RESULT
 }
 
-[ -f /usr/local/share/antigen/antigen.zsh ] && source /usr/local/share/antigen/antigen.zsh
-[ -f ~/.antigen/antigen.zsh ] && source ~/.antigen/antigen.zsh
+if [ ! -f ~/.antigen/antigen.zsh ]
+then
+  git clone https://github.com/zsh-users/antigen.git .antigen
+fi
+
+source ~/.antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
