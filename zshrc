@@ -35,8 +35,13 @@ zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
-BASE16_SHELL=$HOME/.config/base16-shell/
+BASE16_SHELL=$HOME/.config/base16-shell
+if [ ! -d $BASE16_SHELL ]
+then
+  git clone https://github.com/chriskempson/base16-shell.git $BASE16_SHELL
+fi
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+[ ! -f "$HOME/.base16_theme" ] && base16_solarized-dark
 
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 [ -d "$HOME/.rbenv/bin" ] && export PATH="$HOME/.rbenv/bin:$PATH"
