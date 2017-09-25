@@ -36,7 +36,7 @@ activate_base16_shell() {
   fi
 
   [ -n $PS1 ] && [ -s $BASE16_SHELL_DIRECTORY/profile_helper.sh ] && eval "$($BASE16_SHELL_DIRECTORY/profile_helper.sh)"
-  [ ! -f $HOME/.base16_theme ] && base16_solarized-dark
+  [ ! -f $HOME/.base16_theme ] && eval "base16_solarized-dark"
 }
 
 activate_fzf() {
@@ -98,6 +98,15 @@ bind_arrow_keys_history() {
   bindkey "$terminfo[kcud1]" history-substring-search-down
 }
 
+myzsh_clean_up() {
+  rm -rf $ANTIGEN_DIRECTORY
+  rm -rf $PYENV_DIRECTORY
+  rm -rf $NVM_DIRECTORY
+  rm -rf $RBENV_DIRECTORY
+  rm -rf $BASE16_SHELL_DIRECTORY
+  rm -rf $FZF_DIRECTORY
+  rm -rf $HOME/.base16_theme
+}
 install_antigen
 # The following line cannot be sourced inside a function!
 source $ANTIGEN_DIRECTORY/antigen.zsh
