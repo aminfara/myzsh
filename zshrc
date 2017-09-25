@@ -43,7 +43,13 @@ fi
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 [ ! -f "$HOME/.base16_theme" ] && base16_solarized-dark
 
+if [ ! -d "$HOME/.fzf" ]
+then
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --key-bindings --completion --no-update-rc
+fi
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
+
 [ -d "$HOME/.rbenv/bin" ] && export PATH="$HOME/.rbenv/bin:$PATH"
 [ -x "$(command -v rbenv)" ]  && eval "$(rbenv init -)"
 [ -d "$HOME/.pyenv/bin" ] && export PATH="$HOME/.pyenv/bin:$PATH"
