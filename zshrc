@@ -60,6 +60,7 @@ activate_nvm() {
   fi
 
   [ -s $NVM_DIRECTORY/nvm.sh ] && source $NVM_DIRECTORY/nvm.sh
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && source "/usr/local/opt/nvm/nvm.sh"
 }
 
 activate_pyenv() {
