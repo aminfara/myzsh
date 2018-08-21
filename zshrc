@@ -114,9 +114,7 @@ install_nix() {
 }
 
 uninstall_nix() {
-  sudo rm -rf /nix &>/dev/null
-  rm -rf $NIX_PROFILE_DIRECTORY &>/dev/null
-  # rm -rf ~/.nix* &>/dev/null
+  sudo rm -rf /etc/nix /nix /var/root/.nix-profile /var/root/.nix-defexpr /var/root/.nix-channels ~/.nix-profile ~/.nix-defexpr ~/.nix-channels
 }
 
 activate_nix() {
