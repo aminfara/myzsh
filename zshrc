@@ -1,3 +1,15 @@
+case $(uname -s) in
+  Linux*)     MACHINE_TYPE=Linux;;
+  Darwin*)    MACHINE_TYPE=Mac;;
+  *)          MACHINE_TPPE=Unknown
+esac
+
+if [ $MACHINE_TYPE = "Unknown" ]
+then
+  echo "Machine type '$MACHINE_TYPE' is not supported."
+  return
+fi
+
 # CONFIGURATIONS
 ################################################################################
 
