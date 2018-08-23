@@ -29,6 +29,15 @@ print_line() {
   echo "--------------------------------------------------------------------------------"
 }
 
+brew_install_or_upgrade() {
+  if [ $(brew ls $1 &>/dev/null) ]
+  then
+    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+  else
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+  fi
+}
+
 # ANTIGEN
 ################################################################################
 
@@ -118,10 +127,15 @@ activate_fzf() {
 ################################################################################
 install_nix() {
   print_line "Installing NIX"
-  if [ ! -d /nix ]
+  if [ $MACHINE_TYPE = Mac ]
   then
-    sudo mkdir -m 0755 /nix && sudo chown $USER /nix
-    curl https://nixos.org/nix/install | sh
+    echo "I cannot install NIX on mac."
+  else
+    if [ ! -d /nix ]
+    then
+      sudo mkdir -m 0755 /nix && sudo chown $USER /nix
+      curl https://nixos.org/nix/install | sh
+    fi
   fi
 }
 
@@ -137,23 +151,36 @@ activate_nix() {
 ################################################################################
 install_nvm() {
   print_line "Installing NVM"
-  if [ ! -d $NVM_DIRECTORY ]
+  mkdir -p $NVM_DIRECTORY
+  if [ $MACHINE_TYPE = Mac ]
   then
-    git clone https://github.com/creationix/nvm.git $NVM_DIRECTORY
+    brew_install_or_upgrade nvm
   else
-    pushd $NVM_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
+    if [ ! -d $NVM_DIRECTORY/.git ]
+    then
+      git clone https://github.com/creationix/nvm.git $NVM_DIRECTORY
+    else
+      pushd $NVM_DIRECTORY &>/dev/null
+      git pull
+      popd &>/dev/null
+    fi
   fi
+  activate_nvm
 }
 
 uninstall_nvm(){
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew uninstall --force nvm
+  fi
   rm -rf $NVM_DIRECTORY &>/dev/null
 }
 
 activate_nvm() {
+  export NVM_DIR=$NVM_DIRECTORY
   [ -s $NVM_DIRECTORY/nvm.sh ] && source $NVM_DIRECTORY/nvm.sh
-  # [ -s "/usr/local/opt/nvm/nvm.sh" ] && source "/usr/local/opt/nvm/nvm.sh"
+  [ $(command -v brew) ] && [ -s $(brew --prefix)/opt/nvm/nvm.sh ] && source $(brew --prefix)/opt/nvm/nvm.sh
+  true
 }
 
 # PYENV
