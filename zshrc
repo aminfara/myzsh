@@ -137,6 +137,7 @@ install_nix() {
       curl https://nixos.org/nix/install | sh
     fi
   fi
+  activate_nix
 }
 
 uninstall_nix() {
@@ -187,48 +188,75 @@ activate_nvm() {
 ################################################################################
 install_pyenv() {
   print_line "Installing pyenv"
-  if [ ! -d $PYENV_DIRECTORY ]
+  mkdir -p $PYENV_DIRECTORY
+  if [ $MACHINE_TYPE = Mac ]
   then
-    git clone https://github.com/pyenv/pyenv.git $PYENV_DIRECTORY
+    brew_install_or_upgrade pyenv
   else
-    pushd $PYENV_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
+    if [ ! -d $PYENV_DIRECTORY/.git ]
+    then
+      git clone https://github.com/pyenv/pyenv.git $PYENV_DIRECTORY
+    else
+      pushd $PYENV_DIRECTORY &>/dev/null
+      git pull
+      popd &>/dev/null
+    fi
   fi
+  activate_pyenv
 }
 
 uninstall_pyenv() {
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew uninstall --force pyenv
+  fi
   rm -rf $PYENV_DIRECTORY &>/dev/null
 }
 
 activate_pyenv() {
   [ -d $PYENV_DIRECTORY/bin ] && export PATH=$PYENV_DIRECTORY/bin:$PATH
   [ -x "$(command -v pyenv)" ] && eval "$(pyenv init -)"
+  true
 }
 
 # RBENV
 ################################################################################
 install_rbenv() {
   print_line "Installing rbenv"
-  if [ ! -d $RBENV_DIRECTORY ]
+  mkdir -p $RBENV_DIRECTORY
+  if [ $MACHINE_TYPE = Mac ]
   then
-    git clone https://github.com/rbenv/rbenv.git $RBENV_DIRECTORY
-    mkdir -p $RBENV_DIRECTORY/plugins
-    git clone https://github.com/rbenv/ruby-build.git $RBENV_DIRECTORY/plugins/ruby-build
+    brew_install_or_upgrade rbenv
   else
-    pushd $RBENV_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
+    if [ ! -d $RBENV_DIRECTORY/.git ]
+    then
+      git clone https://github.com/rbenv/rbenv.git $RBENV_DIRECTORY
+      mkdir -p $RBENV_DIRECTORY/plugins
+      git clone https://github.com/rbenv/ruby-build.git $RBENV_DIRECTORY/plugins/ruby-build
+    else
+      pushd $RBENV_DIRECTORY &>/dev/null
+      git pull
+      popd &>/dev/null
+      pushd $RBENV_DIRECTORY/plugins/ruby-build &>/dev/null
+      git pull
+      popd &>/dev/null
+    fi
   fi
+  activate_rbenv
 }
 
 uninstall_rbenv() {
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew uninstall --force rbenv
+  fi
   rm -rf $RBENV_DIRECTORY &>/dev/null
 }
 
 activate_rbenv() {
   [ -d $RBENV_DIRECTORY/bin ] && export PATH=$RBENV_DIRECTORY/bin:$PATH
   [ -x "$(command -v rbenv)" ] && eval "$(rbenv init -)"
+  true
 }
 
 # ALL INSTALLERS
@@ -253,7 +281,7 @@ uninstall_all() {
   uninstall_nvm
   uninstall_pyenv
   uninstall_rbenv
-  rm ~/.myzsh_installed
+  rm -rf ~/.myzsh_installed
 }
 
 ssh() {
