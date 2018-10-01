@@ -21,6 +21,9 @@ NVM_DIRECTORY=$HOME/.nvm
 PYENV_DIRECTORY=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
 
+export LC_ALL=en_AU.UTF-8
+export LANG=en_AU.UTF-8
+
 # HELPERs
 ################################################################################
 print_line() {
