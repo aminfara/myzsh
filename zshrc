@@ -26,6 +26,9 @@ export LANG=en_AU.UTF-8
 SPACESHIP_GIT_SYMBOL="⎇  "
 SPACESHIP_DIR_TRUNC=0
 SPACESHIP_DIR_TRUNC_REPO=false
+SPACESHIP_VI_MODE_INSERT=I
+SPACESHIP_VI_MODE_NORMAL=N
+SPACESHIP_VI_MODE_COLOR=black
 
 # HELPERs
 ################################################################################
@@ -69,6 +72,7 @@ antigen_load_plugins() {
     antigen use oh-my-zsh
     antigen bundle key-bindings
     antigen bundle git
+    antigen bundle vi-mode
     antigen bundle zsh-users/zsh-syntax-highlighting
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-history-substring-search
