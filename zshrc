@@ -16,7 +16,6 @@ fi
 ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
 FZF_DIRECTORY=$HOME/.fzf
-NIX_PROFILE_DIRECTORY=$HOME/.nix-profile/etc/profile.d
 NVM_DIRECTORY=$HOME/.nvm
 PYENV_DIRECTORY=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
@@ -61,19 +60,21 @@ uninstall_antigen() {
 }
 
 antigen_load_plugins() {
-  antigen use oh-my-zsh
-  antigen bundle git
-  antigen bundle ruby
-  antigen bundle gem
-  antigen bundle python
-  antigen bundle pip
-  antigen bundle nvm
-  antigen bundle vi-mode
-  antigen bundle zsh-users/zsh-syntax-highlighting
-  antigen bundle zsh-users/zsh-history-substring-search
-  antigen bundle spwhitt/nix-zsh-completions
-  antigen theme dst
-  antigen apply
+  if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
+  then
+    antigen use oh-my-zsh
+    antigen bundle git
+    antigen bundle ruby
+    antigen bundle gem
+    antigen bundle python
+    antigen bundle pip
+    antigen bundle nvm
+    antigen bundle vi-mode
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-history-substring-search
+    antigen theme dst
+    antigen apply
+  fi
 }
 
 # BASE16_SHELL
@@ -97,8 +98,11 @@ uninstall_base16_shell() {
 }
 
 activate_base16_shell() {
-  [ -n $PS1 ] && [ -s $BASE16_SHELL_DIRECTORY/profile_helper.sh ] && eval "$($BASE16_SHELL_DIRECTORY/profile_helper.sh)"
-  [ ! -f $HOME/.base16_theme ] && eval "base16_solarized-dark"
+  if [ -d $BASE16_SHELL_DIRECTORY ]
+  then
+    [ -n $PS1 ] && [ -s $BASE16_SHELL_DIRECTORY/profile_helper.sh ] && eval "$($BASE16_SHELL_DIRECTORY/profile_helper.sh)"
+    [ ! -f $HOME/.base16_theme ] && eval "base16_solarized-dark"
+  fi
 }
 
 # FZF
@@ -113,7 +117,7 @@ install_fzf() {
     git pull
     popd &>/dev/null
   fi
-  $FZF_DIRECTORY/install --key-bindings --completion --no-update-rc
+  $FZF_DIRECTORY/install --key-bindings --completion --no-update-rc --no-bash --no-fish --64
 }
 
 uninstall_fzf(){
@@ -124,31 +128,6 @@ uninstall_fzf(){
 
 activate_fzf() {
   [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-}
-
-# NIX
-################################################################################
-install_nix() {
-  print_line "Installing NIX"
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    echo "I cannot install NIX on mac."
-  else
-    if [ ! -d /nix ]
-    then
-      sudo mkdir -m 0755 /nix && sudo chown $USER /nix
-      curl https://nixos.org/nix/install | sh
-    fi
-  fi
-  activate_nix
-}
-
-uninstall_nix() {
-  sudo rm -rf /etc/nix /nix /var/root/.nix-profile /var/root/.nix-defexpr /var/root/.nix-channels ~/.nix-profile ~/.nix-defexpr ~/.nix-channels
-}
-
-activate_nix() {
-  [ -f $NIX_PROFILE_DIRECTORY/nix.sh ] && source $NIX_PROFILE_DIRECTORY/nix.sh
 }
 
 # NVM
@@ -269,22 +248,18 @@ install_all() {
   install_antigen
   install_base16_shell
   install_fzf
-  install_nix
   install_nvm
   install_pyenv
   install_rbenv
-  touch ~/.myzsh_installed
 }
 
 uninstall_all() {
   uninstall_antigen
   uninstall_base16_shell
   uninstall_fzf
-  uninstall_nix
   uninstall_nvm
   uninstall_pyenv
   uninstall_rbenv
-  rm -rf ~/.myzsh_installed
 }
 
 ssh() {
@@ -301,10 +276,8 @@ bind_arrow_keys_history() {
   bindkey "$terminfo[kcud1]" history-substring-search-down
 }
 
-[ ! -f ~/.myzsh_installed ] && install_all
-
 # The following line cannot be sourced inside a function!
-source $ANTIGEN_DIRECTORY/antigen.zsh
+[ -f $ANTIGEN_DIRECTORY/antigen.zsh ] && source $ANTIGEN_DIRECTORY/antigen.zsh
 
 antigen_load_plugins
 
@@ -312,7 +285,6 @@ bind_arrow_keys_history
 
 activate_base16_shell
 activate_fzf
-activate_nix
 activate_nvm
 activate_pyenv
 activate_rbenv
