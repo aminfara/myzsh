@@ -23,6 +23,10 @@ RBENV_DIRECTORY=$HOME/.rbenv
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 
+SPACESHIP_GIT_SYMBOL="⎇  "
+SPACESHIP_DIR_TRUNC=0
+SPACESHIP_DIR_TRUNC_REPO=false
+
 # HELPERs
 ################################################################################
 print_line() {
@@ -63,16 +67,12 @@ antigen_load_plugins() {
   if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
   then
     antigen use oh-my-zsh
+    antigen bundle key-bindings
     antigen bundle git
-    antigen bundle ruby
-    antigen bundle gem
-    antigen bundle python
-    antigen bundle pip
-    antigen bundle nvm
-    antigen bundle vi-mode
     antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-history-substring-search
-    antigen theme dst
+    antigen theme denysdovhan/spaceship-prompt
     antigen apply
   fi
 }
@@ -269,11 +269,15 @@ ssh() {
     return RESULT
 }
 
+
 bind_arrow_keys_history() {
   # bind UP and DOWN arrow keys
   zmodload zsh/terminfo
-  bindkey "$terminfo[kcuu1]" history-substring-search-up
-  bindkey "$terminfo[kcud1]" history-substring-search-down
+  if if typeset -f history-substring-search-up > /dev/null
+  then
+    bindkey "$terminfo[kcuu1]" history-substring-search-up
+    bindkey "$terminfo[kcud1]" history-substring-search-down
+  fi
 }
 
 # The following line cannot be sourced inside a function!
