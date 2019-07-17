@@ -16,6 +16,7 @@ fi
 ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
 FZF_DIRECTORY=$HOME/.fzf
+N_DIRECTORY=$HOME/n
 NVM_DIRECTORY=$HOME/.nvm
 PYENV_DIRECTORY=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
@@ -139,6 +140,43 @@ uninstall_fzf(){
 
 activate_fzf() {
   [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+}
+
+# N
+################################################################################
+install_n() {
+  print_line "Installing N"
+  mkdir -p $N_DIRECTORY
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew_install_or_upgrade n
+  else
+    if [ ! -d $N_DIRECTORY/repo/.git ]
+    then
+      git clone https://github.com/tj/n $N_DIRECTORY/repo
+    fi
+    pushd $N_DIRECTORY/repo &>/dev/null
+    git pull
+    PREFIX=$N_DIRECTORY make install
+    popd &>/dev/null
+  fi
+  activate_n
+}
+
+uninstall_n(){
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew uninstall --force n
+  fi
+  rm -rf $N_DIRECTORY &>/dev/null
+}
+
+activate_n() {
+  export N_PREFIX=$N_DIRECTORY
+  [ -s $N_DIRECTORY/bin ] && export PATH=$N_DIRECTORY/bin:$PATH
+  # [ -s $NVM_DIRECTORY/nvm.sh ] && source $NVM_DIRECTORY/nvm.sh
+  # [ $(command -v brew) ] && [ -s $(brew --prefix)/opt/nvm/nvm.sh ] && source $(brew --prefix)/opt/nvm/nvm.sh
+  true
 }
 
 # NVM
@@ -351,6 +389,7 @@ antigen_load_plugins
 
 activate_base16_shell
 activate_fzf
+activate_n
 activate_nvm
 activate_pyenv
 activate_rbenv
