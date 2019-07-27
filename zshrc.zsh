@@ -174,8 +174,6 @@ uninstall_n(){
 activate_n() {
   export N_PREFIX=$N_DIRECTORY
   [ -s $N_DIRECTORY/bin ] && export PATH=$N_DIRECTORY/bin:$PATH
-  # [ -s $NVM_DIRECTORY/nvm.sh ] && source $NVM_DIRECTORY/nvm.sh
-  # [ $(command -v brew) ] && [ -s $(brew --prefix)/opt/nvm/nvm.sh ] && source $(brew --prefix)/opt/nvm/nvm.sh
   true
 }
 
