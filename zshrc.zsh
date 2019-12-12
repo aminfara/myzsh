@@ -30,6 +30,7 @@ SPACESHIP_DIR_TRUNC_REPO=false
 SPACESHIP_VI_MODE_INSERT=I
 SPACESHIP_VI_MODE_NORMAL=N
 SPACESHIP_VI_MODE_COLOR=black
+SPACESHIP_TIME_SHOW=true
 
 # HELPERs
 ################################################################################
