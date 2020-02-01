@@ -262,6 +262,9 @@ uninstall_poetry() {
 
 activate_poetry() {
   [ -d $HOME/.poetry/bin ] && export PATH=$HOME/.poetry/bin:$PATH
+  alias po="poetry"
+  alias pr="poetry run"
+  alias prt="poetry run task"
   true
 }
 
