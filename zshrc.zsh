@@ -249,6 +249,22 @@ activate_pyenv() {
   true
 }
 
+# POETRY
+################################################################################
+install_poetry() {
+  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+  activate_poetry
+}
+
+uninstall_poetry() {
+  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python
+}
+
+activate_poetry() {
+  [ -d $HOME/.poetry/bin ] && export PATH=$HOME/.poetry/bin:$PATH
+  true
+}
+
 # RBENV
 ################################################################################
 install_rbenv() {
@@ -391,6 +407,7 @@ activate_fzf
 activate_n
 activate_nvm
 activate_pyenv
+activate_poetry
 activate_rbenv
 
 myzsh_keybindings
