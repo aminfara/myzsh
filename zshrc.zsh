@@ -79,15 +79,22 @@ antigen_load_plugins() {
   if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
   then
     antigen use oh-my-zsh
+    antigen bundle vi-mode
+    # antigen bundle key-bindings
+    antigen bundle osx
     antigen bundle git
     antigen bundle docker
     antigen bundle docker-compose
-    antigen bundle vi-mode
-    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle python
+    antigen bundle pip
+    antigen bundle node
+    antigen bundle npm
+    antigen bundle npx
+    antigen bundle zsh-users/zsh-completions
     antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-syntax-highlighting
     antigen bundle zsh-users/zsh-history-substring-search
     antigen theme denysdovhan/spaceship-prompt
-    antigen bundle key-bindings
     antigen apply
   fi
 }
