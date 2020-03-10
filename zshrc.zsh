@@ -80,6 +80,8 @@ antigen_load_plugins() {
   then
     antigen use oh-my-zsh
     antigen bundle git
+    antigen bundle docker
+    antigen bundle docker-compose
     antigen bundle vi-mode
     antigen bundle zsh-users/zsh-syntax-highlighting
     antigen bundle zsh-users/zsh-autosuggestions
