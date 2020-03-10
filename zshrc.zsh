@@ -428,4 +428,5 @@ myzsh_keybindings
 
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
+export PATH=$HOME/.local/bin:$PATH
 date
