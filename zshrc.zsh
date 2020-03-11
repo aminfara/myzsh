@@ -393,8 +393,10 @@ install_all() {
   install_antigen
   install_base16_shell
   install_fzf
+  install_n
   install_nvm
   install_pyenv
+  install_poetry
   install_rbenv
 }
 
@@ -402,8 +404,10 @@ uninstall_all() {
   uninstall_antigen
   uninstall_base16_shell
   uninstall_fzf
+  uninstall_n
   uninstall_nvm
   uninstall_pyenv
+  uninstall_poetry
   uninstall_rbenv
 }
 
