@@ -81,7 +81,10 @@ antigen_load_plugins() {
     antigen use oh-my-zsh
     antigen bundle vi-mode
     # antigen bundle key-bindings
-    antigen bundle osx
+    if [ $MACHINE_TYPE = "Mac" ]
+    then
+      antigen bundle osx
+    fi
     antigen bundle git
     antigen bundle docker
     antigen bundle docker-compose
