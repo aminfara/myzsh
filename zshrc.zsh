@@ -142,7 +142,7 @@ install_fzf() {
     git pull
     popd &>/dev/null
   fi
-  $FZF_DIRECTORY/install --key-bindings --completion --no-update-rc --no-bash --no-fish --64
+  $FZF_DIRECTORY/install --key-bindings --completion --no-update-rc --no-bash --no-fish
 }
 
 uninstall_fzf(){
