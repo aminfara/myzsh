@@ -18,7 +18,7 @@ BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
 FZF_DIRECTORY=$HOME/.fzf
 N_DIRECTORY=$HOME/.n
 NVM_DIRECTORY=$HOME/.nvm
-PYENV_DIRECTORY=$HOME/.pyenv
+PYENV_ROOT=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
 
 export LC_ALL=en_AU.UTF-8
@@ -230,16 +230,16 @@ activate_nvm() {
 ################################################################################
 install_pyenv() {
   print_line "Installing pyenv"
-  mkdir -p $PYENV_DIRECTORY
+  mkdir -p $PYENV_ROOT
   if [ $MACHINE_TYPE = Mac ]
   then
     brew_install_or_upgrade pyenv
   else
-    if [ ! -d $PYENV_DIRECTORY/.git ]
+    if [ ! -d $PYENV_ROOT/.git ]
     then
-      git clone https://github.com/pyenv/pyenv.git $PYENV_DIRECTORY
+      git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
     else
-      pushd $PYENV_DIRECTORY &>/dev/null
+      pushd $PYENV_ROOT &>/dev/null
       git pull
       popd &>/dev/null
     fi
@@ -252,12 +252,12 @@ uninstall_pyenv() {
   then
     brew uninstall --force pyenv
   fi
-  rm -rf $PYENV_DIRECTORY &>/dev/null
+  rm -rf $PYENV_ROOT &>/dev/null
 }
 
 activate_pyenv() {
-  [ -d $PYENV_DIRECTORY/bin ] && export PATH=$PYENV_DIRECTORY/bin:$PATH
-  [ -x "$(command -v pyenv)" ] && eval "$(pyenv init -)"
+  [ -d $PYENV_ROOT/bin ] && export PATH=$PYENV_ROOT/bin:$PATH
+  [ -x "$(command -v pyenv)" ] && eval "$(pyenv init --path)" && eval "$(pyenv init -)"
   true
 }
 
