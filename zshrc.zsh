@@ -93,7 +93,6 @@ antigen_load_plugins() {
     antigen bundle pip
     antigen bundle node
     antigen bundle npm
-    antigen bundle npx
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-syntax-highlighting
     antigen bundle zsh-users/zsh-history-substring-search
