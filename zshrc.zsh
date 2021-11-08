@@ -20,6 +20,7 @@ N_DIRECTORY=$HOME/.n
 NVM_DIRECTORY=$HOME/.nvm
 PYENV_ROOT=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
+LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
 
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
@@ -319,6 +320,15 @@ activate_rbenv() {
   true
 }
 
+# Linux brew
+################################################################################
+
+activate_linuxbrew() {
+  [ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  true
+}
+
+
 # KEY BINDINGS
 ################################################################################
 
@@ -427,6 +437,7 @@ activate_nvm
 activate_pyenv
 activate_poetry
 activate_rbenv
+activate_linuxbrew
 
 myzsh_keybindings
 
