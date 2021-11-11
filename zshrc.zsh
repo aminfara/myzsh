@@ -37,17 +37,25 @@ SPACESHIP_TIME_SHOW=true
 ################################################################################
 print_line() {
   echo
-  echo $1
+  echo $@
   echo "--------------------------------------------------------------------------------"
 }
 
 brew_install_or_upgrade() {
-  if [ $(brew ls $1 &>/dev/null) ]
+  brew ls "$@" &>/dev/null
+  if [ "$?" -eq "0" ]
   then
-    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+    print_line "Brew upgrading $@"
+    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$@"
   else
-    HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+    print_line "Brew installing $@"
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install "$@"
   fi
+}
+
+brew_uninstall() {
+  print_line "Brew uninstalling $@"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall "$@"
 }
 
 ssh() {
@@ -102,6 +110,30 @@ antigen_load_plugins() {
   fi
 }
 
+# CLI goodies
+################################################################################
+install_cli_tools() {
+  brew_install_or_upgrade fd ripgrep fzf
+  # Install fzf key bindings
+  $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+}
+
+uninstall_cli_tools() {
+  brew_uninstall fd ripgrep fzf
+  [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
+}
+
+activate_cli_tools () {
+  if [ -f $HOME/.fzf.zsh ]
+  then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
+    bindkey "ç" fzf-cd-widget
+    source $HOME/.fzf.zsh
+  fi
+}
+
 # BASE16_SHELL
 ################################################################################
 install_base16_shell() {
@@ -128,31 +160,6 @@ activate_base16_shell() {
     [ -n $PS1 ] && [ -s $BASE16_SHELL_DIRECTORY/profile_helper.sh ] && eval "$($BASE16_SHELL_DIRECTORY/profile_helper.sh)"
     [ ! -f $HOME/.base16_theme ] && eval "base16_solarized-dark"
   fi
-}
-
-# FZF
-################################################################################
-install_fzf() {
-  print_line "Installing FZF"
-  if [ ! -d $FZF_DIRECTORY ]
-  then
-    git clone --depth 1 https://github.com/junegunn/fzf.git $FZF_DIRECTORY
-  else
-    pushd $FZF_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
-  fi
-  $FZF_DIRECTORY/install --key-bindings --completion --no-update-rc --no-bash --no-fish
-}
-
-uninstall_fzf(){
-  rm -rf $FZF_DIRECTORY &>/dev/null
-  rm -rf ~/.fzf* &>/dev/null
-  rm -rf ~/.config/fish/functions/fzf_key_bindings.fish &>/dev/null
-}
-
-activate_fzf() {
-  [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 }
 
 # N
@@ -431,7 +438,7 @@ antigen_load_plugins
 # bind_arrow_keys_history
 
 activate_base16_shell
-activate_fzf
+activate_cli_tools
 activate_n
 activate_nvm
 activate_pyenv
