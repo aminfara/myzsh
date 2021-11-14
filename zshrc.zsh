@@ -123,6 +123,7 @@ install_cli_tools() {
   brew_install_or_upgrade fd ripgrep fzf htop
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+  activate_cli_tools
 }
 
 uninstall_cli_tools() {
@@ -172,8 +173,8 @@ activate_base16_shell() {
 # ASDF
 ################################################################################
 install_asdf() {
-  print_line "Installing asdf"
   brew_install_or_upgrade asdf
+  activate_asdf
 }
 
 uninstall_asdf() {
@@ -188,7 +189,6 @@ activate_asdf() {
 # N
 ################################################################################
 install_n() {
-  print_line "Installing N"
   brew_install_or_upgrade n
   activate_n
 }
@@ -208,35 +208,18 @@ activate_n() {
 # PYENV
 ################################################################################
 install_pyenv() {
-  print_line "Installing pyenv"
-  mkdir -p $PYENV_ROOT
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_install_or_upgrade pyenv
-  else
-    if [ ! -d $PYENV_ROOT/.git ]
-    then
-      git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
-    else
-      pushd $PYENV_ROOT &>/dev/null
-      git pull
-      popd &>/dev/null
-    fi
-  fi
+  brew_install_or_upgrade pyenv
   activate_pyenv
 }
 
 uninstall_pyenv() {
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew uninstall --force pyenv
-  fi
+  brew uninstall --force pyenv
   rm -rf $PYENV_ROOT &>/dev/null
 }
 
 activate_pyenv() {
   [ -d $PYENV_ROOT/bin ] && export PATH=$PYENV_ROOT/bin:$PATH
-  [ -x "$(command -v pyenv)" ] && eval "$(pyenv init --path)" && eval "$(pyenv init -)"
+  [ -x "$(command -v pyenv)" ] && eval "$(pyenv init -)"
   true
 }
 
@@ -256,46 +239,6 @@ activate_poetry() {
   alias po="poetry"
   alias pr="poetry run"
   alias prt="poetry run task"
-  true
-}
-
-# RBENV
-################################################################################
-install_rbenv() {
-  print_line "Installing rbenv"
-  mkdir -p $RBENV_DIRECTORY
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_install_or_upgrade rbenv
-  else
-    if [ ! -d $RBENV_DIRECTORY/.git ]
-    then
-      git clone https://github.com/rbenv/rbenv.git $RBENV_DIRECTORY
-      mkdir -p $RBENV_DIRECTORY/plugins
-      git clone https://github.com/rbenv/ruby-build.git $RBENV_DIRECTORY/plugins/ruby-build
-    else
-      pushd $RBENV_DIRECTORY &>/dev/null
-      git pull
-      popd &>/dev/null
-      pushd $RBENV_DIRECTORY/plugins/ruby-build &>/dev/null
-      git pull
-      popd &>/dev/null
-    fi
-  fi
-  activate_rbenv
-}
-
-uninstall_rbenv() {
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew uninstall --force rbenv
-  fi
-  rm -rf $RBENV_DIRECTORY &>/dev/null
-}
-
-activate_rbenv() {
-  [ -d $RBENV_DIRECTORY/bin ] && export PATH=$RBENV_DIRECTORY/bin:$PATH
-  [ -x "$(command -v rbenv)" ] && eval "$(rbenv init -)"
   true
 }
 
@@ -412,10 +355,8 @@ antigen_load_plugins
 activate_base16_shell
 activate_cli_tools
 activate_n
-activate_nvm
 activate_pyenv
 activate_poetry
-activate_rbenv
 activate_linuxbrew
 activate_asdf
 
