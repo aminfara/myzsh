@@ -65,6 +65,16 @@ ssh() {
     return RESULT
 }
 
+# Auto completion
+################################################################################
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
 # ANTIGEN
 ################################################################################
 
@@ -90,14 +100,11 @@ antigen_load_plugins() {
     antigen use oh-my-zsh
     antigen bundle vi-mode
     # antigen bundle key-bindings
-    antigen bundle zsh-users/zsh-completions
     if [ $MACHINE_TYPE = "Mac" ]
     then
       antigen bundle osx
     fi
     antigen bundle git
-    antigen bundle docker
-    antigen bundle docker-compose
     antigen bundle python
     antigen bundle pip
     antigen bundle node
@@ -113,7 +120,7 @@ antigen_load_plugins() {
 # CLI goodies
 ################################################################################
 install_cli_tools() {
-  brew_install_or_upgrade fd ripgrep fzf
+  brew_install_or_upgrade fd ripgrep fzf htop
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
 }
@@ -162,32 +169,32 @@ activate_base16_shell() {
   fi
 }
 
+# ASDF
+################################################################################
+install_asdf() {
+  print_line "Installing asdf"
+  brew_install_or_upgrade asdf
+}
+
+uninstall_asdf() {
+  brew_uninstall asdf
+}
+
+activate_asdf() {
+  ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
+  [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
+}
+
 # N
 ################################################################################
 install_n() {
   print_line "Installing N"
-  mkdir -p $N_DIRECTORY
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_install_or_upgrade n
-  else
-    if [ ! -d $N_DIRECTORY/repo/.git ]
-    then
-      git clone https://github.com/tj/n $N_DIRECTORY/repo
-    fi
-    pushd $N_DIRECTORY/repo &>/dev/null
-    git pull
-    PREFIX=$N_DIRECTORY make install
-    popd &>/dev/null
-  fi
+  brew_install_or_upgrade n
   activate_n
 }
 
 uninstall_n(){
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew uninstall --force n
-  fi
+  brew uninstall --force n
   rm -rf $N_DIRECTORY &>/dev/null
 }
 
@@ -445,6 +452,7 @@ activate_pyenv
 activate_poetry
 activate_rbenv
 activate_linuxbrew
+activate_asdf
 
 myzsh_keybindings
 
