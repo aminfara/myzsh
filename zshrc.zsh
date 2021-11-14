@@ -17,7 +17,7 @@ ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
 FZF_DIRECTORY=$HOME/.fzf
 N_DIRECTORY=$HOME/.n
-NVM_DIRECTORY=$HOME/.nvm
+NPM_DIRECTORY=$HOME/.npm
 PYENV_ROOT=$HOME/.pyenv
 RBENV_DIRECTORY=$HOME/.rbenv
 LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
@@ -193,50 +193,15 @@ install_n() {
   activate_n
 }
 
-uninstall_n(){
+uninstall_n() {
   brew uninstall --force n
   rm -rf $N_DIRECTORY &>/dev/null
+  rm -rf $NPM_DIRECTORY &>/dev/null
 }
 
 activate_n() {
   export N_PREFIX=$N_DIRECTORY
   [ -s $N_DIRECTORY/bin ] && export PATH=$N_DIRECTORY/bin:$PATH
-  true
-}
-
-# NVM
-################################################################################
-install_nvm() {
-  print_line "Installing NVM"
-  mkdir -p $NVM_DIRECTORY
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_install_or_upgrade nvm
-  else
-    if [ ! -d $NVM_DIRECTORY/.git ]
-    then
-      git clone https://github.com/creationix/nvm.git $NVM_DIRECTORY
-    else
-      pushd $NVM_DIRECTORY &>/dev/null
-      git pull
-      popd &>/dev/null
-    fi
-  fi
-  activate_nvm
-}
-
-uninstall_nvm(){
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew uninstall --force nvm
-  fi
-  rm -rf $NVM_DIRECTORY &>/dev/null
-}
-
-activate_nvm() {
-  export NVM_DIR=$NVM_DIRECTORY
-  [ -s $NVM_DIRECTORY/nvm.sh ] && source $NVM_DIRECTORY/nvm.sh
-  [ $(command -v brew) ] && [ -s $(brew --prefix)/opt/nvm/nvm.sh ] && source $(brew --prefix)/opt/nvm/nvm.sh
   true
 }
 
