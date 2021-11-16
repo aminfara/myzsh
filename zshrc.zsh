@@ -15,12 +15,13 @@ fi
 
 ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
-FZF_DIRECTORY=$HOME/.fzf
-N_DIRECTORY=$HOME/.n
-NPM_DIRECTORY=$HOME/.npm
-PYENV_ROOT=$HOME/.pyenv
-RBENV_DIRECTORY=$HOME/.rbenv
 LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
+ASDF_DIRECTORY=$HOME/.asdf
+NPM_DIRECTORY=$HOME/.npm
+
+FZF_DIRECTORY=$HOME/.fzf #TODO: remove
+N_DIRECTORY=$HOME/.n #TODO: remove
+PYENV_ROOT=$HOME/.pyenv #TODO: remove
 
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
@@ -35,6 +36,7 @@ SPACESHIP_TIME_SHOW=true
 
 # HELPERs
 ################################################################################
+
 print_line() {
   echo
   echo $@
@@ -55,7 +57,20 @@ brew_install_or_upgrade() {
 
 brew_uninstall() {
   print_line "Brew uninstalling $@"
-  HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall "$@"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall --force "$@"
+}
+
+git_install_or_update() {
+  if [ ! -d "$1"/.git ]
+  then
+    print_line "Installing $2"
+    git clone https://github.com/"$2" "$1"
+  else
+    print_line "Updating $2"
+    pushd "$1" &>/dev/null
+    git pull
+    popd &>/dev/null
+  fi
 }
 
 ssh() {
@@ -65,61 +80,44 @@ ssh() {
     return RESULT
 }
 
-# Auto completion
-################################################################################
-if type brew &>/dev/null
-then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-  autoload -Uz compinit
-  compinit
-fi
-
-# ANTIGEN
+# Install Homebrew
 ################################################################################
 
-install_antigen() {
-  print_line "Installing Antigen"
-  if [ ! -f $ANTIGEN_DIRECTORY/antigen.zsh ]
-  then
-    git clone https://github.com/zsh-users/antigen.git $ANTIGEN_DIRECTORY
-  else
-    pushd $ANTIGEN_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
-  fi
+install_linux_build_essentials() {
+  # AL2
+  sudo yum -y groups install "buildsys-build"
+  sudo yum -y groups install "Development Tools"
+  # python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Fedora)
+  sudo yum -y install zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl11-devel xz xz-devel libffi-devel findutils
+  # Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
+  sudo yum -y install procps-ng curl file git
 }
 
-uninstall_antigen() {
-  rm -rf $ANTIGEN_DIRECTORY &>/dev/null
-}
-
-antigen_load_plugins() {
-  if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
+install_homebrew() {
+  type brew &>/dev/null
+  is_brew_installed=$?
+  if [[ "is_brew_installed" -ne "0" ]]
   then
-    antigen use oh-my-zsh
-    antigen bundle vi-mode
-    # antigen bundle key-bindings
-    if [ $MACHINE_TYPE = "Mac" ]
+    if [ $MACHINE_TYPE = Linux ]
     then
-      antigen bundle osx
+      install_linux_build_essentials
     fi
-    antigen bundle git
-    antigen bundle python
-    antigen bundle pip
-    antigen bundle node
-    antigen bundle npm
-    antigen bundle zsh-users/zsh-autosuggestions
-    antigen bundle zsh-users/zsh-syntax-highlighting
-    antigen bundle zsh-users/zsh-history-substring-search
-    antigen theme denysdovhan/spaceship-prompt
-    antigen apply
+
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    activate_homebrew
   fi
+}
+
+activate_homebrew() {
+  [ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  true
 }
 
 # CLI goodies
 ################################################################################
+
 install_cli_tools() {
+  install_homebrew
   brew_install_or_upgrade fd ripgrep fzf htop
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
@@ -139,6 +137,41 @@ activate_cli_tools () {
     export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
     bindkey "ç" fzf-cd-widget
     source $HOME/.fzf.zsh
+  fi
+}
+
+# ANTIGEN
+################################################################################
+
+install_antigen() {
+  git_install_or_update $ANTIGEN_DIRECTORY "zsh-users/antigen.git"
+  activate_antigen
+}
+
+uninstall_antigen() {
+  rm -rf $ANTIGEN_DIRECTORY &>/dev/null
+}
+
+activate_antigen() {
+  if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
+  then
+    antigen use oh-my-zsh
+    antigen bundle vi-mode
+    # antigen bundle key-bindings
+    if [ $MACHINE_TYPE = "Mac" ]
+    then
+      antigen bundle osx
+    fi
+    antigen bundle git
+    antigen bundle python
+    antigen bundle pip
+    antigen bundle node
+    antigen bundle npm
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-history-substring-search
+    antigen theme denysdovhan/spaceship-prompt
+    antigen apply
   fi
 }
 
@@ -173,16 +206,31 @@ activate_base16_shell() {
 # ASDF
 ################################################################################
 install_asdf() {
-  brew_install_or_upgrade asdf
+  mkdir -p $ASDF_DIRECTORY
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew_install_or_upgrade asdf
+  else
+    git_install_or_update $ASDF_DIRECTORY "asdf-vm/asdf.git"
+  fi
   activate_asdf
 }
 
 uninstall_asdf() {
-  brew_uninstall asdf
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    brew_uninstall asdf
+  fi
+  rm -rf $ASDF_DIRECTORY
 }
 
 activate_asdf() {
-  ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
+  if [ $MACHINE_TYPE = Mac ]
+  then
+    ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
+  else
+    ASDF_SHELL=$ASDF_DIRECTORY/asdf.sh
+  fi
   [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
 }
 
@@ -194,7 +242,7 @@ install_n() {
 }
 
 uninstall_n() {
-  brew uninstall --force n
+  brew_uninstall n
   rm -rf $N_DIRECTORY &>/dev/null
   rm -rf $NPM_DIRECTORY &>/dev/null
 }
@@ -213,7 +261,7 @@ install_pyenv() {
 }
 
 uninstall_pyenv() {
-  brew uninstall --force pyenv
+  brew_uninstall pyenv
   rm -rf $PYENV_ROOT &>/dev/null
 }
 
@@ -241,15 +289,6 @@ activate_poetry() {
   alias prt="poetry run task"
   true
 }
-
-# Linux brew
-################################################################################
-
-activate_linuxbrew() {
-  [ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  true
-}
-
 
 # KEY BINDINGS
 ################################################################################
@@ -320,10 +359,27 @@ myzsh_keybindings() {
   fi
 }
 
+# Auto completion
+################################################################################
+update_auto_completions() {
+  if [ ! -f ~/.zcompdump ]
+  then
+    print_line "Updating zsh completions"
+    if type brew &>/dev/null
+    then
+      FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+    fi
+
+    autoload -Uz compinit
+    compinit
+  fi
+}
+
+
 # The following line cannot be sourced inside a function!
 [ -f $ANTIGEN_DIRECTORY/antigen.zsh ] && source $ANTIGEN_DIRECTORY/antigen.zsh
 
-antigen_load_plugins
+activate_antigen
 
 # bind_arrow_keys_history
 
@@ -332,10 +388,12 @@ activate_cli_tools
 activate_n
 activate_pyenv
 activate_poetry
-activate_linuxbrew
+activate_homebrew
 activate_asdf
 
 myzsh_keybindings
+
+update_auto_completions
 
 [ -x "$HOME/.vocab" ] && $HOME/.vocab
 
