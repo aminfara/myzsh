@@ -44,6 +44,7 @@ print_line() {
 }
 
 brew_install_or_upgrade() {
+  install_homebrew
   brew ls "$@" &>/dev/null
   if [ "$?" -eq "0" ]
   then
@@ -84,6 +85,7 @@ ssh() {
 ################################################################################
 
 install_linux_build_essentials() {
+  print_line "Installing Linux build essentials"
   # AL2
   sudo yum -y groups install "buildsys-build"
   sudo yum -y groups install "Development Tools"
@@ -103,6 +105,7 @@ install_homebrew() {
       install_linux_build_essentials
     fi
 
+    print_line "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     activate_homebrew
   fi
@@ -117,7 +120,6 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  install_homebrew
   brew_install_or_upgrade fd ripgrep fzf htop
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
@@ -206,88 +208,51 @@ activate_base16_shell() {
 # ASDF
 ################################################################################
 install_asdf() {
-  mkdir -p $ASDF_DIRECTORY
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_install_or_upgrade asdf
-  else
-    git_install_or_update $ASDF_DIRECTORY "asdf-vm/asdf.git"
-  fi
+  brew_install_or_upgrade asdf
   activate_asdf
 }
 
 uninstall_asdf() {
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    brew_uninstall asdf
-  fi
+  brew_uninstall asdf
   rm -rf $ASDF_DIRECTORY
 }
 
 activate_asdf() {
-  if [ $MACHINE_TYPE = Mac ]
-  then
-    ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
-  else
-    ASDF_SHELL=$ASDF_DIRECTORY/asdf.sh
-  fi
+  ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
   [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
 }
 
-# N
-################################################################################
-install_n() {
-  brew_install_or_upgrade n
-  activate_n
+install_python() {
+  install_asdf
+  print_line "Install asdf python plugin"
+  asdf plugin add python
+  path_backup=$PATH
+  # TODO: remove on resolution of https://github.com/pyenv/pyenv/issues/2159
+  if [ $MACHINE_TYPE = Linux ]
+  then
+    export PATH=$(echo $PATH | sed -e 's|/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:||')
+  fi
+  print_line "Installing python $1"
+  asdf install python $1
+  asdf global python $1
+  asdf reshim python
+  export PATH=$path_backup
+  activate_asdf
+  echo "python version:"
+  python --version
 }
 
-uninstall_n() {
-  brew_uninstall n
-  rm -rf $N_DIRECTORY &>/dev/null
-  rm -rf $NPM_DIRECTORY &>/dev/null
-}
-
-activate_n() {
-  export N_PREFIX=$N_DIRECTORY
-  [ -s $N_DIRECTORY/bin ] && export PATH=$N_DIRECTORY/bin:$PATH
-  true
-}
-
-# PYENV
-################################################################################
-install_pyenv() {
-  brew_install_or_upgrade pyenv
-  activate_pyenv
-}
-
-uninstall_pyenv() {
-  brew_uninstall pyenv
-  rm -rf $PYENV_ROOT &>/dev/null
-}
-
-activate_pyenv() {
-  [ -d $PYENV_ROOT/bin ] && export PATH=$PYENV_ROOT/bin:$PATH
-  [ -x "$(command -v pyenv)" ] && eval "$(pyenv init -)"
-  true
-}
-
-# POETRY
-################################################################################
-install_poetry() {
-  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-  activate_poetry
-}
-
-uninstall_poetry() {
-  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_UNINSTALL=1 python
-}
-
-activate_poetry() {
-  [ -d $HOME/.poetry/bin ] && export PATH=$HOME/.poetry/bin:$PATH
-  alias po="poetry"
-  alias pr="poetry run"
-  alias prt="poetry run task"
-  true
+install_node() {
+  install_asdf
+  print_line "Install asdf nodejs plugin"
+  asdf plugin add nodejs
+  print_line "Installing nodejs $1"
+  asdf install nodejs $1
+  asdf global nodejs $1
+  asdf reshim nodejs
+  activate_asdf
+  echo "nodejs version:"
+  node --version
 }
 
 # KEY BINDINGS
@@ -361,13 +326,16 @@ myzsh_keybindings() {
 
 # Auto completion
 ################################################################################
+
 update_auto_completions() {
   if [ ! -f ~/.zcompdump ]
   then
     print_line "Updating zsh completions"
-    if type brew &>/dev/null
+    type brew &>/dev/null
+    is_brew_installed=$?
+    if [[ "is_brew_installed" -ne "0" ]]
     then
-      FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+        FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
     fi
 
     autoload -Uz compinit
@@ -379,17 +347,11 @@ update_auto_completions() {
 # The following line cannot be sourced inside a function!
 [ -f $ANTIGEN_DIRECTORY/antigen.zsh ] && source $ANTIGEN_DIRECTORY/antigen.zsh
 
-activate_antigen
-
-# bind_arrow_keys_history
-
-activate_base16_shell
-activate_cli_tools
-activate_n
-activate_pyenv
-activate_poetry
 activate_homebrew
+activate_cli_tools
 activate_asdf
+activate_antigen
+activate_base16_shell
 
 myzsh_keybindings
 
