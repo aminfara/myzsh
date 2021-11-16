@@ -19,10 +19,6 @@ LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
 ASDF_DIRECTORY=$HOME/.asdf
 NPM_DIRECTORY=$HOME/.npm
 
-FZF_DIRECTORY=$HOME/.fzf #TODO: remove
-N_DIRECTORY=$HOME/.n #TODO: remove
-PYENV_ROOT=$HOME/.pyenv #TODO: remove
-
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 
@@ -43,6 +39,15 @@ print_line() {
   echo "--------------------------------------------------------------------------------"
 }
 
+is_homebrew_installed() {
+  if [ ! -v BREW_INSTALLED ]
+  then
+    type brew &>/dev/null
+    export BREW_INSTALLED=$?
+  fi
+  return $BREW_INSTALLED
+}
+
 brew_install_or_upgrade() {
   install_homebrew
   brew ls "$@" &>/dev/null
@@ -57,8 +62,14 @@ brew_install_or_upgrade() {
 }
 
 brew_uninstall() {
-  print_line "Brew uninstalling $@"
-  HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall --force "$@"
+  if is_homebrew_installed
+  then
+    print_line "Brew uninstalling $@"
+    HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall --force "$@"
+  else
+    echo "Homebrew is not installed"
+    return 1
+  fi
 }
 
 git_install_or_update() {
@@ -96,9 +107,7 @@ install_linux_build_essentials() {
 }
 
 install_homebrew() {
-  type brew &>/dev/null
-  is_brew_installed=$?
-  if [[ "is_brew_installed" -ne "0" ]]
+  if ! is_homebrew_installed
   then
     if [ $MACHINE_TYPE = Linux ]
     then
@@ -108,6 +117,7 @@ install_homebrew() {
     print_line "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     activate_homebrew
+    unset BREW_INSTALLED
   fi
 }
 
@@ -146,49 +156,51 @@ activate_cli_tools () {
 ################################################################################
 
 install_antigen() {
-  git_install_or_update $ANTIGEN_DIRECTORY "zsh-users/antigen.git"
+  brew_install_or_upgrade antigen
+  # git_install_or_update $ANTIGEN_DIRECTORY "zsh-users/antigen.git"
   activate_antigen
 }
 
 uninstall_antigen() {
+  brew_uninstall antigen
   rm -rf $ANTIGEN_DIRECTORY &>/dev/null
 }
 
 activate_antigen() {
-  if [ -f $ANTIGEN_DIRECTORY/antigen.zsh ]
+  type antigen &>/dev/null && return
+
+  if is_homebrew_installed
   then
-    antigen use oh-my-zsh
-    antigen bundle vi-mode
-    # antigen bundle key-bindings
-    if [ $MACHINE_TYPE = "Mac" ]
+    ANTIGEN_EXEC_DIRECTORY=$(brew --prefix antigen)/share/antigen
+    if [ -f $ANTIGEN_EXEC_DIRECTORY/antigen.zsh ]
     then
-      antigen bundle osx
+      source $ANTIGEN_EXEC_DIRECTORY/antigen.zsh
+      antigen use oh-my-zsh
+      antigen bundle vi-mode
+      # antigen bundle key-bindings
+      if [ $MACHINE_TYPE = "Mac" ]
+      then
+        antigen bundle osx
+      fi
+      antigen bundle git
+      antigen bundle python
+      antigen bundle pip
+      antigen bundle node
+      antigen bundle npm
+      antigen bundle zsh-users/zsh-autosuggestions
+      antigen bundle zsh-users/zsh-syntax-highlighting
+      antigen bundle zsh-users/zsh-history-substring-search
+      antigen theme denysdovhan/spaceship-prompt
+      antigen apply
     fi
-    antigen bundle git
-    antigen bundle python
-    antigen bundle pip
-    antigen bundle node
-    antigen bundle npm
-    antigen bundle zsh-users/zsh-autosuggestions
-    antigen bundle zsh-users/zsh-syntax-highlighting
-    antigen bundle zsh-users/zsh-history-substring-search
-    antigen theme denysdovhan/spaceship-prompt
-    antigen apply
   fi
 }
 
 # BASE16_SHELL
 ################################################################################
 install_base16_shell() {
-  print_line "Installing Base16 Shell"
-  if [ ! -d $BASE16_SHELL_DIRECTORY ]
-  then
-    git clone https://github.com/chriskempson/base16-shell.git $BASE16_SHELL_DIRECTORY
-  else
-    pushd $BASE16_SHELL_DIRECTORY &>/dev/null
-    git pull
-    popd &>/dev/null
-  fi
+  git_install_or_update $BASE16_SHELL_DIRECTORY "chriskempson/base16-shell.git"
+  activate_base16_shell
 }
 
 uninstall_base16_shell() {
@@ -218,8 +230,11 @@ uninstall_asdf() {
 }
 
 activate_asdf() {
-  ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
-  [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
+  if is_homebrew_installed
+  then
+    ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
+    [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
+  fi
 }
 
 install_python() {
@@ -331,9 +346,7 @@ update_auto_completions() {
   if [ ! -f ~/.zcompdump ]
   then
     print_line "Updating zsh completions"
-    type brew &>/dev/null
-    is_brew_installed=$?
-    if [[ "is_brew_installed" -ne "0" ]]
+    if is_homebrew_installed
     then
         FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
     fi
@@ -342,10 +355,6 @@ update_auto_completions() {
     compinit
   fi
 }
-
-
-# The following line cannot be sourced inside a function!
-[ -f $ANTIGEN_DIRECTORY/antigen.zsh ] && source $ANTIGEN_DIRECTORY/antigen.zsh
 
 activate_homebrew
 activate_cli_tools
