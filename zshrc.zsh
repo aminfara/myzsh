@@ -130,7 +130,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade fd ripgrep fzf htop
+  brew_install_or_upgrade git fd ripgrep fzf htop
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   activate_cli_tools
@@ -183,10 +183,6 @@ activate_antigen() {
         antigen bundle osx
       fi
       antigen bundle git
-      antigen bundle python
-      antigen bundle pip
-      antigen bundle node
-      antigen bundle npm
       antigen bundle zsh-users/zsh-autosuggestions
       antigen bundle zsh-users/zsh-syntax-highlighting
       antigen bundle zsh-users/zsh-history-substring-search
@@ -253,6 +249,7 @@ install_python() {
   asdf reshim python
   export PATH=$path_backup
   activate_asdf
+  python3 -m pip install --upgrade pip
   echo "python version:"
   python --version
 }
@@ -268,6 +265,24 @@ install_node() {
   activate_asdf
   echo "nodejs version:"
   node --version
+}
+
+# NVIM
+################################################################################
+install_neovim() {
+  brew_install_or_upgrade neovim
+  npm install -g neovim tree-sitter-cli
+  python3 -m pip install pynvim
+  ln -s $HOME/.myzsh/nvim $HOME/.config/nvim
+}
+
+uninstall_neovim() {
+  brew_uninstall neovim
+  npm uninstall -g neovim tree-sitter-cli
+  python3 -m pip uninstall -y pynvim
+  rm -rf $HOME/.config/nvim
+  rm -rf $HOME/.local/share/nvim
+  rm -rf $HOME/.cache/nvim
 }
 
 # KEY BINDINGS
@@ -343,28 +358,28 @@ myzsh_keybindings() {
 ################################################################################
 
 update_auto_completions() {
-  if [ ! -f ~/.zcompdump ]
+  # We do not need compinit as oh-my-zsh will run compinit
+  if is_homebrew_installed
   then
-    print_line "Updating zsh completions"
-    if is_homebrew_installed
+    if [ $MACHINE_TYPE = Linux ]
     then
-        FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+      FPATH="$LINUXBREW_DIRECTORY/share/zsh/site-functions:${FPATH}"
     fi
-
-    autoload -Uz compinit
-    compinit
   fi
 }
+
+# Turn off beep
+setopt nobeep
 
 activate_homebrew
 activate_cli_tools
 activate_asdf
+update_auto_completions # should be before antigen
 activate_antigen
 activate_base16_shell
 
 myzsh_keybindings
 
-update_auto_completions
 
 [ -x "$HOME/.vocab" ] && $HOME/.vocab
 
