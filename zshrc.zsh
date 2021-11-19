@@ -130,7 +130,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop
+  brew_install_or_upgrade git fd ripgrep fzf htop gnupg
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   activate_cli_tools
@@ -180,7 +180,7 @@ activate_antigen() {
       # antigen bundle key-bindings
       if [ $MACHINE_TYPE = "Mac" ]
       then
-        antigen bundle osx
+        antigen bundle macos
       fi
       antigen bundle git
       antigen bundle zsh-users/zsh-autosuggestions
