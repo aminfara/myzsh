@@ -13,6 +13,7 @@ fi
 # CONFIGURATIONS
 ################################################################################
 
+MYZSH_INSTALLED_DIR=$HOME/.myzsh
 ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
 LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
@@ -130,9 +131,10 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop gnupg
+  brew_install_or_upgrade git fd ripgrep fzf htop gnupg tmux
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+  ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
   activate_cli_tools
 }
 
@@ -259,6 +261,7 @@ install_node() {
   print_line "Install asdf nodejs plugin"
   asdf plugin add nodejs
   print_line "Installing nodejs $1"
+  echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
   asdf install nodejs $1
   asdf global nodejs $1
   asdf reshim nodejs
