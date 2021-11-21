@@ -283,6 +283,7 @@ uninstall_neovim() {
   brew_uninstall neovim
   npm uninstall -g neovim tree-sitter-cli
   python3 -m pip uninstall -y pynvim
+  rm -rf $MYZSH_INSTALLED_DIR/nvim/plugin/packer_compiled.lua
   rm -rf $HOME/.config/nvim
   rm -rf $HOME/.local/share/nvim
   rm -rf $HOME/.cache/nvim
