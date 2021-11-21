@@ -29,6 +29,27 @@ return require('packer').startup({
       end,
     })
 
+    -- Install plenary which is util functions used by other plugins like telescope
+    use('nvim-lua/plenary.nvim')
+
+    use({
+      'nvim-treesitter/nvim-treesitter',
+      branch = '0.5-compat',
+      run = ':TSUpdate',
+      event = 'BufRead',
+      config = function()
+        require('treesitter')
+      end,
+    })
+
+    -- Fuzzy finder
+    -- TODO: Telescope key mappings
+    -- TODO: Telescope customisations
+    use({
+      'nvim-telescope/telescope.nvim',
+      requires = { { 'nvim-lua/plenary.nvim' } },
+    })
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
