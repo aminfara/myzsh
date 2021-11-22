@@ -23,7 +23,7 @@ return require('packer').startup({
 
     -- Activate colorscheme
     use({
-      'chriskempson/base16-vim',
+      'RRethy/nvim-base16',
       config = function()
         require('colorscheme')
       end,
