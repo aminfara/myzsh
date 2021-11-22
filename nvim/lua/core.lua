@@ -37,7 +37,9 @@ opt.wildignore = 'build,.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*
 opt.ttimeoutlen = 100
 
 -- folding
+-- If treesitter is installed this will be overridden with `expr`
 opt.foldmethod = 'syntax'
+opt.foldenable = false
 
 -- invisible characters
 opt.list = true

@@ -32,6 +32,7 @@ return require('packer').startup({
     -- Install plenary which is util functions used by other plugins like telescope
     use('nvim-lua/plenary.nvim')
 
+    -- Parser
     use({
       'nvim-treesitter/nvim-treesitter',
       branch = '0.5-compat',
