@@ -8,6 +8,7 @@ local opt = vim.opt
 -- TODO: textobjects and movements
 -- TODO: Folds, Locals, Indents, Injections
 -- TODO: key mappings
+-- TODO: rainbow parenthesis
 
 treesitter_configs.setup({
   ensure_installed = { 'lua', 'python' },

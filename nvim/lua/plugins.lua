@@ -3,6 +3,8 @@
 
 local fn = vim.fn
 
+-- TODO: null-ls
+
 -- Bootstrap packer if it is not installed
 local packer_install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(packer_install_path)) > 0 then
@@ -42,6 +44,14 @@ return require('packer').startup({
         require('treesitter')
       end,
     })
+
+    -- Language Servers
+    use({
+      'neovim/nvim-lspconfig',
+      'williamboman/nvim-lsp-installer',
+    })
+    -- TODO: separate lsp installation and activation using packer
+    require('languange_servers')
 
     -- Fuzzy finder
     -- TODO: Telescope key mappings
