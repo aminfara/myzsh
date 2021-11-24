@@ -31,9 +31,6 @@ return require('packer').startup({
       end,
     })
 
-    -- Install plenary which is util functions used by other plugins like telescope
-    use('nvim-lua/plenary.nvim')
-
     -- Parser
     use({
       'nvim-treesitter/nvim-treesitter',
@@ -47,11 +44,12 @@ return require('packer').startup({
 
     -- Language Servers
     use({
-      'neovim/nvim-lspconfig',
-      'williamboman/nvim-lsp-installer',
+      'jose-elias-alvarez/null-ls.nvim',
+      config = function()
+        require('languange_servers')
+      end,
+      requires = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig', 'williamboman/nvim-lsp-installer' },
     })
-    -- TODO: separate lsp installation and activation using packer
-    require('languange_servers')
 
     -- Fuzzy finder
     -- TODO: Telescope key mappings

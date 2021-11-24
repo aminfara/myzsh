@@ -1,4 +1,14 @@
+local status_ok, nvim_lsp = pcall(require, 'lspconfig')
+if not status_ok then
+  return
+end
+
 local status_ok, lsp_installer_servers = pcall(require, 'nvim-lsp-installer.servers')
+if not status_ok then
+  return
+end
+
+local status_ok, null_ls = pcall(require, 'null-ls')
 if not status_ok then
   print('bad!')
   return
@@ -27,3 +37,17 @@ if server_available then
     requested_server:install()
   end
 end
+
+local sources = {
+  null_ls.builtins.diagnostics.flake8.with({
+    condition = function(utils)
+      return vim.fn.executable('flake8') > 0
+    end,
+  }),
+}
+
+null_ls.config({
+  sources = sources,
+})
+
+nvim_lsp['null-ls'].setup({})
