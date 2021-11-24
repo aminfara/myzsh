@@ -127,7 +127,7 @@
             ]
           },
           {
-            "description": "AliX layer b as space",
+            "description": "AliX layer v as space",
             "manipulators": [
               {
                 "conditions": [
@@ -138,7 +138,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "b",
+                  "key_code": "v",
                   "modifiers": {
                     "optional": ["any"]
                   }
@@ -242,6 +242,53 @@
             ]
           },
           {
+            "description": "AliX layer ctrl-f, ctrl-b as page up/down",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "name": "alix_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "b",
+                  "modifiers": {
+                    "mandatory": ["control"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "page_up"
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "name": "alix_mode",
+                    "type": "variable_if",
+                    "value": 1
+                  }
+                ],
+                "from": {
+                  "key_code": "f",
+                  "modifiers": {
+                    "mandatory": ["control"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "page_down"
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
             "description": "AliX layer b, e to word movement",
             "manipulators": [
               {
@@ -284,53 +331,6 @@
                   {
                     "key_code": "right_arrow",
                     "modifiers": ["right_option"]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "AliX layer ctrl-f, ctrl-b as page up/down",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "name": "alix_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "b",
-                  "modifiers": {
-                    "mandatory": ["control"]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "page_up"
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "name": "alix_mode",
-                    "type": "variable_if",
-                    "value": 1
-                  }
-                ],
-                "from": {
-                  "key_code": "f",
-                  "modifiers": {
-                    "mandatory": ["control"]
-                  }
-                },
-                "to": [
-                  {
-                    "key_code": "page_down"
                   }
                 ],
                 "type": "basic"
