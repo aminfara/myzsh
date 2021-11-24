@@ -56,13 +56,6 @@ local sources = {
       return vim.fn.executable('flake8') > 0
     end,
   }),
-
-  null_ls.builtins.diagnostics.mypy.with({
-    condition = function(utils)
-      return vim.fn.executable('mypy') > 0
-    end,
-    extra_args = { '--strict' },
-  }),
 }
 
 null_ls.config({
