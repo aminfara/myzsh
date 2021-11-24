@@ -39,10 +39,29 @@ if server_available then
 end
 
 local sources = {
+  null_ls.builtins.formatting.isort.with({
+    condition = function(utils)
+      return vim.fn.executable('isort') > 0
+    end,
+  }),
+
+  null_ls.builtins.formatting.black.with({
+    condition = function(utils)
+      return vim.fn.executable('black') > 0
+    end,
+  }),
+
   null_ls.builtins.diagnostics.flake8.with({
     condition = function(utils)
       return vim.fn.executable('flake8') > 0
     end,
+  }),
+
+  null_ls.builtins.diagnostics.mypy.with({
+    condition = function(utils)
+      return vim.fn.executable('mypy') > 0
+    end,
+    extra_args = { '--strict' },
   }),
 }
 
@@ -50,4 +69,6 @@ null_ls.config({
   sources = sources,
 })
 
-nvim_lsp['null-ls'].setup({})
+nvim_lsp['null-ls'].setup({
+  autostart = true,
+})
