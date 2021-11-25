@@ -10,14 +10,22 @@ end
 
 local status_ok, null_ls = pcall(require, 'null-ls')
 if not status_ok then
-  print('bad!')
   return
 end
+
+local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+if not status_ok then
+  return
+end
+
+-- TODO: Understand!
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local server_available, requested_server = lsp_installer_servers.get_server('pyright')
 if server_available then
   requested_server:on_ready(function()
     local opts = {
+      capabilities = capabilities,
       settings = {
         python = {
           analysis = {
