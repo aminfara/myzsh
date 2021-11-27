@@ -30,6 +30,7 @@ SPACESHIP_VI_MODE_INSERT=I
 SPACESHIP_VI_MODE_NORMAL=N
 SPACESHIP_VI_MODE_COLOR=black
 SPACESHIP_TIME_SHOW=true
+SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery vi_mode jobs exit_code char)
 
 # HELPERs
 ################################################################################
@@ -131,7 +132,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop gnupg tmux
+  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tmux
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
@@ -179,7 +180,7 @@ activate_antigen() {
       source $ANTIGEN_EXEC_DIRECTORY/antigen.zsh
       antigen use oh-my-zsh
       antigen bundle vi-mode
-      # antigen bundle key-bindings
+      antigen bundle key-bindings
       if [ $MACHINE_TYPE = "Mac" ]
       then
         antigen bundle macos
@@ -289,6 +290,16 @@ uninstall_neovim() {
   rm -rf $HOME/.cache/nvim
 }
 
+# Mac key repeat for vscode
+################################################################################
+
+fix_key_repeat_for_vscode() {
+  if [ $MACHINE_TYPE = Linux ]
+  then
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+  fi
+}
+
 # KEY BINDINGS
 ################################################################################
 
@@ -376,10 +387,10 @@ update_auto_completions() {
 setopt nobeep
 
 activate_homebrew
-activate_cli_tools
-activate_asdf
 update_auto_completions # should be before antigen
 activate_antigen
+activate_cli_tools
+activate_asdf
 activate_base16_shell
 
 myzsh_keybindings
