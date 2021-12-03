@@ -132,7 +132,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tmux
+  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
@@ -160,7 +160,6 @@ activate_cli_tools () {
 
 install_antigen() {
   brew_install_or_upgrade antigen
-  # git_install_or_update $ANTIGEN_DIRECTORY "zsh-users/antigen.git"
   activate_antigen
 }
 
