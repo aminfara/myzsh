@@ -136,6 +136,7 @@ install_cli_tools() {
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
+  cp $MYZSH_INSTALLED_DIR/gitconfig-template $HOME/.gitconfig
   activate_cli_tools
 }
 
@@ -232,6 +233,7 @@ activate_asdf() {
   then
     ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
     [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
+    [ -f "$ASDF_DIRECTORY/plugins/java/set-java-home.zsh" ] && source "$ASDF_DIRECTORY/plugins/java/set-java-home.zsh"
   fi
 }
 
@@ -268,6 +270,19 @@ install_node() {
   activate_asdf
   echo "nodejs version:"
   node --version
+}
+
+install_java() {
+  install_asdf
+  print_line "Install asdf java plugin"
+  asdf plugin add java
+  print_line "Installing java $1"
+  asdf install java $1
+  asdf global java $1
+  asdf reshim java
+  activate_asdf
+  echo "java version:"
+  java -version
 }
 
 # NVIM
