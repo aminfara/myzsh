@@ -99,13 +99,26 @@ ssh() {
 
 install_linux_build_essentials() {
   print_line "Installing Linux build essentials"
-  # AL2
-  sudo yum -y groups install "buildsys-build"
-  sudo yum -y groups install "Development Tools"
-  # python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Fedora)
-  sudo yum -y install zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl11-devel xz xz-devel libffi-devel findutils
-  # Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
-  sudo yum -y install procps-ng curl file git
+  if command -v "yum" &> /dev/null
+  then
+    # AL2
+    sudo yum -y groups install "buildsys-build"
+    sudo yum -y groups install "Development Tools"
+    # python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Fedora)
+    sudo yum -y install zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl11-devel xz xz-devel libffi-devel findutils
+    # Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
+    sudo yum -y install procps-ng curl file git
+  fi
+
+  if command -v "apt" &> /dev/null
+  then
+    # Ubuntu
+    sudo apt update
+    # Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
+    sudo apt install build-essential procps curl file git
+    # python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Ubuntu)
+    sudo apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+  fi
 }
 
 install_homebrew() {
