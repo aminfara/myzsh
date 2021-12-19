@@ -304,7 +304,6 @@ install_neovim() {
   brew_install_or_upgrade neovim
   npm install -g neovim tree-sitter-cli
   python3 -m pip install pynvim
-  ln -s $HOME/.myzsh/nvim $HOME/.config/nvim
 }
 
 uninstall_neovim() {
