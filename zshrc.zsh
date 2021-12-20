@@ -115,7 +115,7 @@ install_linux_build_essentials() {
     # Ubuntu
     sudo apt update
     # Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
-    sudo apt install build-essential procps curl file git
+    sudo apt install build-essential procps curl file git python3-pip vim
     # python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Ubuntu)
     sudo apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
   fi
