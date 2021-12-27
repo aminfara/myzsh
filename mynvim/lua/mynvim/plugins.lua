@@ -25,6 +25,7 @@ vim.cmd([[
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, 'packer')
 if not status_ok then
+  vim.notify('Failed to load packer.nvim.')
   return
 end
 
@@ -40,6 +41,21 @@ return packer.startup({
       'RRethy/nvim-base16',
       config = function()
         require('mynvim.colorscheme')
+      end,
+    })
+
+    -- autocomplete and snippets plugins
+    use('hrsh7th/cmp-buffer') -- buffer completions
+    use('hrsh7th/cmp-path') -- path completions
+    use('hrsh7th/cmp-cmdline') -- cmdline completions
+    use('saadparwaiz1/cmp_luasnip') -- snippet completions
+    use('L3MON4D3/LuaSnip') --snippet engine
+    use('rafamadriz/friendly-snippets') -- a bunch of snippets to use
+
+    use({
+      'hrsh7th/nvim-cmp', -- The completion plugin
+      config = function()
+        require('mynvim.completion')
       end,
     })
 
