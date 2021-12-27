@@ -35,6 +35,14 @@ return packer.startup({
     use('nvim-lua/popup.nvim') -- An implementation of the Popup API from vim in Neovim
     use('nvim-lua/plenary.nvim') -- Useful lua functions used by lots of plugins
 
+    -- base16 colorscheme
+    use({
+      'RRethy/nvim-base16',
+      config = function()
+        require('mynvim.colorscheme')
+      end,
+    })
+
     -- TODO: Add plugins from neovim from scratch
 
     -- Automatically set up your configuration after cloning packer.nvim
