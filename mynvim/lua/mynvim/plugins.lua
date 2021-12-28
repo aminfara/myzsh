@@ -45,17 +45,27 @@ return packer.startup({
     })
 
     -- autocomplete and snippets plugins
+    use('hrsh7th/cmp-nvim-lsp') -- LSP completion
     use('hrsh7th/cmp-buffer') -- buffer completions
     use('hrsh7th/cmp-path') -- path completions
     use('hrsh7th/cmp-cmdline') -- cmdline completions
     use('saadparwaiz1/cmp_luasnip') -- snippet completions
     use('L3MON4D3/LuaSnip') --snippet engine
     use('rafamadriz/friendly-snippets') -- a bunch of snippets to use
-
     use({
       'hrsh7th/nvim-cmp', -- The completion plugin
       config = function()
         require('mynvim.completion')
+      end,
+    })
+
+    -- language servers
+    use('neovim/nvim-lspconfig')
+    use('ray-x/lsp_signature.nvim')
+    use({
+      'williamboman/nvim-lsp-installer',
+      config = function()
+        require('mynvim.lsp')
       end,
     })
 
