@@ -62,8 +62,9 @@ return packer.startup({
     -- language servers
     use('neovim/nvim-lspconfig')
     use('ray-x/lsp_signature.nvim')
+    use('williamboman/nvim-lsp-installer')
     use({
-      'williamboman/nvim-lsp-installer',
+      'jose-elias-alvarez/null-ls.nvim',
       config = function()
         require('mynvim.lsp')
       end,
