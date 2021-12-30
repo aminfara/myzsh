@@ -70,6 +70,19 @@ return packer.startup({
       end,
     })
 
+    -- Treesitter
+    use({
+      'nvim-treesitter/nvim-treesitter',
+      run = ':TSUpdate',
+    })
+    use({
+      'p00f/nvim-ts-rainbow',
+      after = { 'nvim-treesitter' },
+      config = function()
+        require('mynvim.treesitter')
+      end,
+    })
+
     -- TODO: Add plugins from neovim from scratch
 
     -- Automatically set up your configuration after cloning packer.nvim
