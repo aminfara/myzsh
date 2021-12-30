@@ -44,6 +44,13 @@ return packer.startup({
       end,
     })
 
+    use({
+      'folke/which-key.nvim',
+      config = function()
+        require('mynvim.whichkey')
+      end,
+    })
+
     -- autocomplete and snippets plugins
     use('hrsh7th/cmp-nvim-lsp') -- LSP completion
     use('hrsh7th/cmp-buffer') -- buffer completions
