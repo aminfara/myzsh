@@ -45,6 +45,7 @@ return packer.startup({
       end,
     })
 
+    -- which-key shows possible keys
     use({
       'folke/which-key.nvim',
       config = function()
@@ -78,7 +79,7 @@ return packer.startup({
       end,
     })
 
-    -- Treesitter
+    -- Treesitter syntax highlight
     use({
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
@@ -91,11 +92,20 @@ return packer.startup({
       end,
     })
 
+    -- Telescope fuzzy finder
     use({
       'nvim-telescope/telescope.nvim',
       requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' },
       config = function()
         require('mynvim.telescope')
+      end,
+    })
+
+    -- auto pairs
+    use({
+      'windwp/nvim-autopairs',
+      config = function()
+        require('mynvim.autopairs')
       end,
     })
     -- TODO: Add plugins from neovim from scratch

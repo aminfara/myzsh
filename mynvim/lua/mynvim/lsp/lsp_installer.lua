@@ -60,6 +60,9 @@ local on_attach = function(client, bufnr)
       border = 'rounded',
     },
   }, bufnr)
+
+  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.formatting()' ]])
+
   lsp_keymaps(bufnr)
   lsp_highlight_document(client)
 end
