@@ -53,6 +53,7 @@ local function lsp_keymaps(bufnr)
 end
 
 local on_attach = function(client, bufnr)
+  -- TODO: format on save
   lsp_signature.on_attach({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
     handler_opts = {
