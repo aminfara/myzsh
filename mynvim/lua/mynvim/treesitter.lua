@@ -20,6 +20,10 @@ configs.setup({
   },
   indent = { enable = true },
   rainbow = { enable = true },
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
+  },
 })
 
 vim.opt.foldmethod = 'expr'

@@ -9,3 +9,19 @@ which_key.setup({
     border = 'rounded',
   },
 })
+
+-- Fix which key text for Comment.nvim
+which_key.register({
+  c = {
+    name = 'Line comment',
+    c = {
+      'Current line',
+    },
+  },
+  b = {
+    name = 'Block comment',
+    c = {
+      'Current line',
+    },
+  },
+}, { prefix = 'g' })

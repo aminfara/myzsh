@@ -84,9 +84,10 @@ return packer.startup({
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
     })
+    use('JoosepAlviste/nvim-ts-context-commentstring')
     use({
       'p00f/nvim-ts-rainbow',
-      after = { 'nvim-treesitter' },
+      after = { 'nvim-treesitter', 'nvim-ts-context-commentstring' },
       config = function()
         require('mynvim.treesitter')
       end,
@@ -108,6 +109,16 @@ return packer.startup({
         require('mynvim.autopairs')
       end,
     })
+
+    -- Easily comment stuff
+    use({
+      'numToStr/Comment.nvim',
+      after = { 'nvim-ts-context-commentstring' },
+      config = function()
+        require('mynvim.comment')
+      end,
+    })
+
     -- TODO: Add plugins from neovim from scratch
 
     -- Automatically set up your configuration after cloning packer.nvim
