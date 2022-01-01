@@ -119,6 +119,13 @@ return packer.startup({
       end,
     })
 
+    use({
+      'lewis6991/gitsigns.nvim',
+      config = function()
+        require('mynvim.gitsigns')
+      end,
+    })
+
     -- TODO: Add plugins from neovim from scratch
 
     -- Automatically set up your configuration after cloning packer.nvim
