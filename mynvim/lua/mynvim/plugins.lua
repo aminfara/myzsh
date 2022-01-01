@@ -119,10 +119,19 @@ return packer.startup({
       end,
     })
 
+    -- git signs
     use({
       'lewis6991/gitsigns.nvim',
       config = function()
         require('mynvim.gitsigns')
+      end,
+    })
+
+    -- file tree
+    use({
+      'kyazdani42/nvim-tree.lua',
+      config = function()
+        require('mynvim.nvimtree')
       end,
     })
 
