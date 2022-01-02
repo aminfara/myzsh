@@ -135,6 +135,14 @@ return packer.startup({
       end,
     })
 
+    -- project
+    use({
+      'ahmedkhalf/project.nvim',
+      config = function()
+        require('mynvim.project')
+      end,
+    })
+
     -- TODO: Add plugins from neovim from scratch
 
     -- Automatically set up your configuration after cloning packer.nvim

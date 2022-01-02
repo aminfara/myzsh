@@ -4,10 +4,14 @@ if not status_ok then
   return
 end
 
+vim.g.nvim_tree_respect_buf_cwd = 1
+
 -- TODO: whichkey shortcut
 nvim_tree.setup({
   auto_close = true,
+  update_cwd = true,
   update_focused_file = {
     enable = true,
+    update_cwd = true,
   },
 })
