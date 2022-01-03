@@ -427,4 +427,7 @@ myzsh_keybindings
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export PATH=$HOME/.local/bin:$PATH
+
+export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
+
 date
