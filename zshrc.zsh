@@ -154,7 +154,7 @@ install_cli_tools() {
 }
 
 uninstall_cli_tools() {
-  brew_uninstall fd ripgrep fzf
+  brew_uninstall git fd ripgrep fzf htop jq gnupg tree tmux
   [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
 }
 
@@ -301,13 +301,13 @@ install_java() {
 # NVIM
 ################################################################################
 install_neovim() {
-  brew_install_or_upgrade neovim
+  brew_install_or_upgrade neovim stylua
   npm install -g neovim tree-sitter-cli
   python3 -m pip install pynvim
 }
 
 uninstall_neovim() {
-  brew_uninstall neovim
+  brew_uninstall neovim stylua
   npm uninstall -g neovim tree-sitter-cli
   python3 -m pip uninstall -y pynvim
   rm -rf $MYZSH_INSTALLED_DIR/nvim/plugin/packer_compiled.lua
