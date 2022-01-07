@@ -11,7 +11,7 @@ end
 -- TODO: comment string
 
 configs.setup({
-  ensure_installed = require('vima.Languages').supported_languages,
+  ensure_installed = require('vima.Languages').get_treesitter_languages(),
   sync_install = false,
   highlight = {
     enable = true,
