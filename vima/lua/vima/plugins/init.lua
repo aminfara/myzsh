@@ -35,6 +35,19 @@ return packer.startup({
       end,
     })
 
+    -- Treesitter syntax highlight
+    use({
+      'nvim-treesitter/nvim-treesitter',
+      run = ':TSUpdate',
+    })
+    use({
+      'p00f/nvim-ts-rainbow', -- Rainbow brackets
+      after = { 'nvim-treesitter' },
+      config = function()
+        require('vima.plugins.treesitter')
+      end,
+    })
+
     -- Automatically set up your configuration after cloning packer.nvim
     if packer_bootstrap then
       vim.cmd('hi clear Pmenu')
