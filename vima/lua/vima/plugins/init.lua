@@ -31,7 +31,7 @@ return packer.startup({
     use({
       'RRethy/nvim-base16',
       config = function()
-        require('vima.colorscheme')
+        require('vima.plugins.colorscheme')
       end,
     })
 
