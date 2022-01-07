@@ -49,3 +49,15 @@ opt.wildignore = 'build,.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*
 opt.wildmode = 'longest,full'
 opt.wrap = false
 opt.writebackup = false
+
+-- Core mappings
+--------------------------------------------------------------------------------
+
+local map = require('vima.utils').map
+
+-- Space as leader key
+vim.g.mapleader = ' '
+map('', '<Space>', '<NOP>')
+
+-- Insert mode mappings
+map('i', 'jk', '<Esc>')
