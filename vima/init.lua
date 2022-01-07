@@ -1,0 +1,1 @@
+require('vima.core')
