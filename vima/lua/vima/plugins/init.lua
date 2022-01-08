@@ -48,6 +48,15 @@ return packer.startup({
       end,
     })
 
+    -- language servers
+    use('neovim/nvim-lspconfig')
+    use({
+      'williamboman/nvim-lsp-installer',
+      config = function()
+        require('vima.plugins.lsp')
+      end,
+    })
+
     -- Automatically set up your configuration after cloning packer.nvim
     if packer_bootstrap then
       vim.cmd('hi clear Pmenu')
