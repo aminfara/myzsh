@@ -61,6 +61,14 @@ return packer.startup({
       end,
     })
 
+    -- git signs
+    use({
+      'lewis6991/gitsigns.nvim',
+      config = function()
+        require('vima.plugins.gitsigns')
+      end,
+    })
+
     -- autocomplete and snippets plugins
     use('hrsh7th/cmp-nvim-lsp')
     use('hrsh7th/cmp-buffer')
