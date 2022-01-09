@@ -48,6 +48,21 @@ return packer.startup({
       end,
     })
 
+    -- autocomplete and snippets plugins
+    use('hrsh7th/cmp-nvim-lsp')
+    use('hrsh7th/cmp-buffer')
+    use('hrsh7th/cmp-path')
+    use('hrsh7th/cmp-cmdline')
+    use('saadparwaiz1/cmp_luasnip')
+    use('L3MON4D3/LuaSnip')
+    use('rafamadriz/friendly-snippets')
+    use({
+      'hrsh7th/nvim-cmp',
+      config = function()
+        require('vima.plugins.completion')
+      end,
+    })
+
     -- language servers
     use('neovim/nvim-lspconfig')
     use('folke/lua-dev.nvim')
