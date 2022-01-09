@@ -27,11 +27,23 @@ return packer.startup({
     -- Packer can manage itself
     use('wbthomason/packer.nvim')
 
+    use('nvim-lua/popup.nvim')
+    use('nvim-lua/plenary.nvim') -- utility functions used by other plugins
+    use('kyazdani42/nvim-web-devicons')
+
     --color scheme
     use({
       'RRethy/nvim-base16',
       config = function()
         require('vima.plugins.colorscheme')
+      end,
+    })
+
+    -- which-key shows possible keys
+    use({
+      'folke/which-key.nvim',
+      config = function()
+        require('vima.plugins.whichkey')
       end,
     })
 
@@ -66,8 +78,10 @@ return packer.startup({
     -- language servers
     use('neovim/nvim-lspconfig')
     use('folke/lua-dev.nvim')
+    use('ray-x/lsp_signature.nvim')
+    use('williamboman/nvim-lsp-installer')
     use({
-      'williamboman/nvim-lsp-installer',
+      'jose-elias-alvarez/null-ls.nvim',
       config = function()
         require('vima.plugins.lsp')
       end,

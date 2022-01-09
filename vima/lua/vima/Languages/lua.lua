@@ -35,7 +35,25 @@ end
 
 M.get_lsp_configs = function()
   return {
-    sumneko_lua = lsp_config,
+    sumneko_lua = {
+      settings = lsp_config,
+      on_attach = function(client, bufnr) end,
+    },
+  }
+end
+
+M.get_null_ls_sources = function()
+  local null_ls_status_ok, null_ls = pcall(require, 'null-ls')
+  if not null_ls_status_ok then
+    vim.notify('Failed to load null-ls.')
+    return {}
+  end
+  return {
+    null_ls.builtins.formatting.stylua.with({
+      condition = function(utils)
+        return vim.fn.executable('stylua') > 0
+      end,
+    }),
   }
 end
 
