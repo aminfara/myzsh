@@ -8,7 +8,6 @@ end
 -- TODO: Folds, Locals, Indents, Injections
 -- TODO: key mappings
 -- TODO: incremental select
--- TODO: comment string
 
 configs.setup({
   ensure_installed = require('vima.Languages').get_treesitter_languages(),
@@ -19,6 +18,10 @@ configs.setup({
   },
   indent = { enable = true },
   rainbow = { enable = true },
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = true,
+  },
 })
 
 vim.opt.foldmethod = 'expr'

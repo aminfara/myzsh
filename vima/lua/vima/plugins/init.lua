@@ -52,9 +52,10 @@ return packer.startup({
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
     })
+    use('JoosepAlviste/nvim-ts-context-commentstring')
     use({
       'p00f/nvim-ts-rainbow', -- Rainbow brackets
-      after = { 'nvim-treesitter' },
+      after = { 'nvim-treesitter', 'nvim-ts-context-commentstring' },
       config = function()
         require('vima.plugins.treesitter')
       end,
@@ -101,6 +102,14 @@ return packer.startup({
       'windwp/nvim-autopairs',
       config = function()
         require('vima.plugins.autopairs')
+      end,
+    })
+
+    use({
+      'numToStr/Comment.nvim',
+      after = { 'nvim-ts-context-commentstring' },
+      config = function()
+        require('vima.plugins.comment')
       end,
     })
 
