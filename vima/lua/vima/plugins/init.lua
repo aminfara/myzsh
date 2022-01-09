@@ -5,7 +5,7 @@ local fn = vim.fn
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 
 if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({
+  PACKER_BOOTSTRAP = fn.system({
     'git',
     'clone',
     '--depth',
@@ -87,6 +87,15 @@ return packer.startup({
       end,
     })
 
+    -- Telescope fuzzy finder
+    use({
+      'nvim-telescope/telescope.nvim',
+      requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' },
+      config = function()
+        require('vima.plugins.telescope')
+      end,
+    })
+
     -- auto pairs
     use({
       'windwp/nvim-autopairs',
@@ -96,7 +105,7 @@ return packer.startup({
     })
 
     -- Automatically set up your configuration after cloning packer.nvim
-    if packer_bootstrap then
+    if PACKER_BOOTSTRAP then
       vim.cmd('hi clear Pmenu')
       packer.sync()
     end
