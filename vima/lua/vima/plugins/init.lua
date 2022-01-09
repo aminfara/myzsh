@@ -69,6 +69,22 @@ return packer.startup({
       end,
     })
 
+    -- file tree
+    use({
+      'kyazdani42/nvim-tree.lua',
+      config = function()
+        require('vima.plugins.nvimtree')
+      end,
+    })
+
+    -- project
+    use({
+      'ahmedkhalf/project.nvim',
+      config = function()
+        require('vima.plugins.project')
+      end,
+    })
+
     -- autocomplete and snippets plugins
     use('hrsh7th/cmp-nvim-lsp')
     use('hrsh7th/cmp-buffer')
