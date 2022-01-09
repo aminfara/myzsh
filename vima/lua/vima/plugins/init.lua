@@ -87,6 +87,14 @@ return packer.startup({
       end,
     })
 
+    -- auto pairs
+    use({
+      'windwp/nvim-autopairs',
+      config = function()
+        require('vima.plugins.autopairs')
+      end,
+    })
+
     -- Automatically set up your configuration after cloning packer.nvim
     if packer_bootstrap then
       vim.cmd('hi clear Pmenu')

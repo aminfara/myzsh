@@ -45,7 +45,7 @@ local function lsp_keymaps(bufnr)
     ['gd'] = { '<cmd>lua vim.lsp.buf.definition()<CR>', 'Go to definition' },
     ['gD'] = { '<cmd>lua vim.lsp.buf.declaration()<CR>', 'Go to declaration' },
     ['gh'] = { '<cmd>lua vim.lsp.buf.hover({ border = "rounded" })<CR>', 'Hover' },
-    ['gl'] = { '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ border = "rounded" })<CR>', 'Line diagnostics' },
+    ['gl'] = { '<cmd>lua vim.diagnostic.open_float()<CR>', 'Line diagnostics' },
     -- TODO: use Telescope for references and diagnostics
   }, { buffer = bufnr })
 end
@@ -94,6 +94,7 @@ require('vima.Languages').setup_supported_lsps(setup_lsp, null_ls_config.add_sou
 null_ls_config.setup_null_ls()
 
 -- LSP Common config
+--------------------------------------------------------------------------------
 
 local signs = {
   { name = 'DiagnosticSignError', text = '' },
