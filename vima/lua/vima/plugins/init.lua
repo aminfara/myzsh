@@ -50,6 +50,7 @@ return packer.startup({
 
     -- language servers
     use('neovim/nvim-lspconfig')
+    use('folke/lua-dev.nvim')
     use({
       'williamboman/nvim-lsp-installer',
       config = function()

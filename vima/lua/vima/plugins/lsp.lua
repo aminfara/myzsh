@@ -25,3 +25,9 @@ end
 require('vima.Languages').setup_supported_lsps(setup_lsp)
 
 -- TODO: better visual config for LSP popups
+vim.diagnostic.config({
+  virtual_text = true,
+  update_in_insert = true,
+  underline = true,
+  severity_sort = true,
+})
