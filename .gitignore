@@ -1,5 +1,6 @@
 tags
 tmp
+.venv
 .zshrc.swp
 automatic_backups
 packer_compiled.lua
