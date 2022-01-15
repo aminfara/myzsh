@@ -1,4 +1,5 @@
 terminals = ["^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
+finder = ["^com\\.apple\\.finder$"]
 
 
 def co(condition):
@@ -10,6 +11,10 @@ def co(condition):
         "unless_terminals": {
             "type": "frontmost_application_unless",
             "bundle_identifiers": terminals,
+        },
+        "if_finder": {
+            "type": "frontmost_application_if",
+            "bundle_identifiers": finder,
         },
     }.get(condition)
 
