@@ -4,3 +4,4 @@ tmp
 .zshrc.swp
 automatic_backups
 packer_compiled.lua
+__pycache__
