@@ -52,7 +52,7 @@ return packer.startup({
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate',
     })
-    use('JoosepAlviste/nvim-ts-context-commentstring')
+    use({ 'JoosepAlviste/nvim-ts-context-commentstring', after = { 'nvim-treesitter' } })
     use({
       'p00f/nvim-ts-rainbow', -- Rainbow brackets
       after = { 'nvim-treesitter', 'nvim-ts-context-commentstring' },
