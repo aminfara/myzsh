@@ -138,7 +138,7 @@ rules = rules(
             ),
             # ------------------------------------------------------------------
             # Alt + Spacebar Open the shortcut menu for the active window.
-            # TODO: find what Alt + Space does in windows
+            # N/A
             # ------------------------------------------------------------------
             # Alt + Left arrow Go back.
             # ------------------------------------------------------------------
@@ -149,20 +149,32 @@ rules = rules(
             # Alt + Page Down Move down one screen.
             # ------------------------------------------------------------------
             # Ctrl + F4 Close the active document (in apps that are full-screen and let you have multiple documents open at the same time).
+            mp(fk("f4", ["control"]), [tk("w", ["right_command"])]),
+            mp(fk("w", ["control"]), [tk("w", ["right_command"])]),
             # ------------------------------------------------------------------
             # Ctrl + A Select all items in a document or window.
+            mp(fk("a", ["control"]), [tk("a", ["right_command"])]),
             # ------------------------------------------------------------------
             # Ctrl + D (or Delete) Delete the selected item and move it to the Recycle Bin.
+            mp(fk("d", ["control"]), [tk("d", ["right_command"])]),
             # ------------------------------------------------------------------
             # Ctrl + E Open Search (in most apps).
             # ------------------------------------------------------------------
             # Ctrl + R (or F5) Refresh the active window.
+            mp(fk("f5", optional=["shift"]), [tk("r", ["right_command"])]),
             # ------------------------------------------------------------------
             # Ctrl + Y Redo an action.
+            mp(fk("y", ["control"]), [tk("z", ["right_command", "right_shift"])]),
+            mp(
+                fk("z", ["control", "shift"]),
+                [tk("z", ["right_command", "right_shift"])],
+            ),
             # ------------------------------------------------------------------
             # Ctrl + Right arrow Move the cursor to the beginning of the next word.
+            mp(fk("right_arrow", ["control"]), [tk("right_arrow", ["option"])]),
             # ------------------------------------------------------------------
             # Ctrl + Left arrow Move the cursor to the beginning of the previous word.
+            mp(fk("left_arrow", ["control"]), [tk("left_arrow", ["option"])]),
             # ------------------------------------------------------------------
             # Ctrl + Down arrow Move the cursor to the beginning of the next paragraph.
             # ------------------------------------------------------------------
