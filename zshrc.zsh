@@ -145,7 +145,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux
+  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
@@ -276,7 +276,8 @@ install_node() {
   print_line "Install asdf nodejs plugin"
   asdf plugin add nodejs
   print_line "Installing nodejs $1"
-  echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
+  # mkdir -p ~/.gnupg
+  # echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
   asdf install nodejs $1
   asdf global nodejs $1
   asdf reshim nodejs
