@@ -304,6 +304,7 @@ install_java() {
 # NVIM
 ################################################################################
 install_neovim() {
+  brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
   brew_install_or_upgrade neovim stylua
   npm install -g neovim tree-sitter-cli
   python3 -m pip install pynvim
