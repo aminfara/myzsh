@@ -145,7 +145,7 @@ activate_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit
+  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
@@ -251,6 +251,8 @@ activate_asdf() {
 }
 
 install_python() {
+  # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+  brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk
   install_asdf
   print_line "Install asdf python plugin"
   asdf plugin add python
