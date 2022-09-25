@@ -268,7 +268,8 @@ install_python() {
   asdf reshim python
   export PATH=$path_backup
   activate_asdf
-  python3 -m pip install --upgrade pip
+  python3 -m pip install --upgrade pip poetry
+  asdf reshim python
   echo "python version:"
   python --version
 }
@@ -289,14 +290,9 @@ install_node() {
 }
 
 install_java() {
-  install_asdf
-  print_line "Install asdf java plugin"
-  asdf plugin add java
-  print_line "Installing java $1"
-  asdf install java $1
-  asdf global java $1
-  asdf reshim java
-  activate_asdf
+  install_homebrew
+  brew tap homebrew/cask-versions
+  brew_install_or_upgrade --cask temurin17
   echo "java version:"
   java -version
 }
