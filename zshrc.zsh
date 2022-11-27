@@ -16,12 +16,8 @@ fi
 MYZSH_INSTALLED_DIR=$HOME/.myzsh
 ANTIGEN_DIRECTORY=$HOME/.antigen
 BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
-LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
 ASDF_DIRECTORY=$HOME/.asdf
 NPM_DIRECTORY=$HOME/.npm
-
-export LC_ALL=en_AU.UTF-8
-export LANG=en_AU.UTF-8
 
 SPACESHIP_GIT_SYMBOL="⎇  "
 SPACESHIP_DIR_TRUNC=0
@@ -134,11 +130,6 @@ install_homebrew() {
     activate_homebrew
     unset BREW_INSTALLED
   fi
-}
-
-activate_homebrew() {
-  [ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  true
 }
 
 # CLI goodies
@@ -268,7 +259,7 @@ install_python() {
   asdf reshim python
   export PATH=$path_backup
   activate_asdf
-  python3 -m pip install --upgrade pip poetry
+  python3 -m pip install --upgrade pip
   asdf reshim python
   echo "python version:"
   python --version
@@ -412,7 +403,6 @@ update_auto_completions() {
 # Turn off beep
 setopt nobeep
 
-activate_homebrew
 update_auto_completions # should be before antigen
 activate_antigen
 activate_cli_tools
@@ -427,7 +417,5 @@ myzsh_keybindings
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export PATH=$HOME/.local/bin:$PATH
-
-export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
 
 date
