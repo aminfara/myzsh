@@ -266,16 +266,10 @@ install_python() {
 }
 
 install_node() {
-  install_asdf
-  print_line "Install asdf nodejs plugin"
-  asdf plugin add nodejs
+  brew_install_or_upgrade n
   print_line "Installing nodejs $1"
-  # mkdir -p ~/.gnupg
-  # echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
-  asdf install nodejs $1
-  asdf global nodejs $1
-  asdf reshim nodejs
-  activate_asdf
+  n $1
+  activate_n
   echo "nodejs version:"
   node --version
 }
