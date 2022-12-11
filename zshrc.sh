@@ -136,7 +136,7 @@ install_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
   brew_install_or_upgrade -f gdu 
   brew link --overwrite gdu  # if you have coreutils installed as well
   # Install fzf key bindings
