@@ -136,10 +136,12 @@ install_homebrew() {
 ################################################################################
 
 install_cli_tools() {
-  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck
+  brew_install_or_upgrade git fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew_install_or_upgrade -f gdu 
+  brew link --overwrite gdu  # if you have coreutils installed as well
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
-  ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
+  [ -f $HOME/.tmux.conf ] || ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
   cp $MYZSH_INSTALLED_DIR/gitconfig-template $HOME/.gitconfig
   activate_cli_tools
 }
