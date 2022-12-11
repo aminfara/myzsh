@@ -371,7 +371,7 @@ myzsh_keybindings() {
   # From old bindings
 
   # bind UP and DOWN arrow keys
-  if if typeset -f history-substring-search-up > /dev/null
+  if typeset -f history-substring-search-up > /dev/null
   then
       bindkey "${key[Up]}" history-substring-search-up
       bindkey -M vicmd "${key[Up]}" history-substring-search-up
