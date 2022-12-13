@@ -51,6 +51,54 @@ return packer.startup({
             end
         })
 
+        -- Treesitter syntax support
+        use({
+            'nvim-treesitter/nvim-treesitter',
+            run = function()
+                local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+                ts_update()
+            end,
+            config = function()
+                require('vima.plugins.treesitter')
+            end
+        })
+
+        use({
+            'andymass/vim-matchup',
+            after = { 'nvim-treesitter' },
+            setup = function()
+                -- may set any options here
+                vim.g.matchup_matchparen_offscreen = { method = "popup" }
+            end
+        })
+
+        use({
+            'p00f/nvim-ts-rainbow', -- Rainbow brackets
+            after = { 'nvim-treesitter' },
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
+
+        use({
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            after = { 'nvim-treesitter' },
+        })
+
+        use({
+            'JoosepAlviste/nvim-ts-context-commentstring',
+            after = { 'nvim-treesitter' },
+        })
+
+        -- context aware commenting
+        use({
+            'numToStr/Comment.nvim',
+            after = { 'nvim-ts-context-commentstring' },
+            config = function()
+                require('vima.plugins.comment')
+            end,
+        })
+
         -- Automatically set up your configuration after cloning packer.nvim
         if PACKER_BOOTSTRAP then
             vim.cmd('hi clear Pmenu')
