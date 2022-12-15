@@ -57,6 +57,17 @@ return packer.startup({
             end
         })
 
+        -- statusline
+        use({
+            'nvim-lualine/lualine.nvim',
+            config = function()
+                require('vima.plugins.lualine')
+            end,
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
+
         -- Treesitter syntax support
         use({
             'nvim-treesitter/nvim-treesitter',
