@@ -28,8 +28,14 @@ return packer.startup({
     function(use)
         -- Packer can manage itself
         use('wbthomason/packer.nvim')
+
+        -- Speedup the start time
+        use('lewis6991/impatient.nvim')
+
         -- utility functions used by other plugins
+
         use('nvim-lua/plenary.nvim')
+
         -- icons used by other plugins
         use({
             'kyazdani42/nvim-web-devicons',
@@ -97,6 +103,17 @@ return packer.startup({
             config = function()
                 require('vima.plugins.comment')
             end,
+        })
+
+        -- Surround
+        use({
+            "kylechui/nvim-surround",
+            tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+            config = function()
+                require("nvim-surround").setup({
+                    -- Configuration here, or leave empty to use defaults
+                })
+            end
         })
 
         -- Automatically set up your configuration after cloning packer.nvim
