@@ -1,4 +1,5 @@
 local opt = vim.opt
+local map = vim.api.nvim_set_keymap
 
 opt.backup = false
 opt.clipboard = 'unnamedplus'
@@ -16,7 +17,8 @@ opt.splitbelow = true
 opt.splitright = true
 opt.swapfile = false
 opt.tabstop = 4
-opt.timeoutlen = 300
+opt.timeout = true
+opt.timeoutlen = 1000
 opt.undofile = true
 opt.undolevels = 2000
 opt.updatetime = 300
@@ -57,3 +59,9 @@ end
 
 -- disable bundled plugins
 vim.g.loaded_matchit = 1
+
+map("i", "jj", "<Esc>", { noremap = true })
+map("i", "jk", "<Esc>", { noremap = true })
+
+map("v", "<", "<gv", { noremap = true })
+map("v", ">", ">gv", { noremap = true })
