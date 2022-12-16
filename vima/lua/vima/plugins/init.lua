@@ -128,10 +128,10 @@ return packer.startup({
         })
 
         use({
-            'ggandor/leap.nvim',
+            'rlane/pounce.nvim',
             config = function()
-                require('leap').add_default_mappings()
-            end,
+                require('vima.plugins.pounce')
+            end
         })
 
         -- Automatically set up your configuration after cloning packer.nvim
