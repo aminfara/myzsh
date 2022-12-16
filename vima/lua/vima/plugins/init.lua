@@ -127,6 +127,13 @@ return packer.startup({
             end
         })
 
+        use({
+            'ggandor/leap.nvim',
+            config = function()
+                require('leap').add_default_mappings()
+            end,
+        })
+
         -- Automatically set up your configuration after cloning packer.nvim
         if PACKER_BOOTSTRAP then
             vim.cmd('hi clear Pmenu')

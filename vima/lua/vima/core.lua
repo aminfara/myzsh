@@ -1,5 +1,5 @@
 local opt = vim.opt
-local map = vim.api.nvim_set_keymap
+local map = vim.keymap.set
 
 opt.backup = false
 opt.clipboard = 'unnamedplus'
@@ -60,8 +60,11 @@ end
 -- disable bundled plugins
 vim.g.loaded_matchit = 1
 
-map("i", "jj", "<Esc>", { noremap = true })
-map("i", "jk", "<Esc>", { noremap = true })
+map("i", "jj", "<Esc>")
+map("i", "jk", "<Esc>")
 
-map("v", "<", "<gv", { noremap = true })
-map("v", ">", ">gv", { noremap = true })
+map("v", "<", "<gv")
+map("v", ">", ">gv")
+
+map({ 'n', 'v' }, "c", '"_c')
+map({ 'n', 'v' }, "d", '"_d')
