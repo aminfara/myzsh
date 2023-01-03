@@ -15,20 +15,17 @@ fi
 
 MYZSH_INSTALLED_DIR=$HOME/.myzsh
 ANTIGEN_DIRECTORY=$HOME/.antigen
-BASE16_SHELL_DIRECTORY=$HOME/.config/base16-shell
+BASE16_SHELL=$HOME/.config/base16-shell
 ASDF_DIRECTORY=$HOME/.asdf
 NPM_DIRECTORY=$HOME/.npm
 
 SPACESHIP_GIT_SYMBOL="⎇  "
 SPACESHIP_DIR_TRUNC=0
 SPACESHIP_DIR_TRUNC_REPO=false
-SPACESHIP_VI_MODE_INSERT=I
-SPACESHIP_VI_MODE_NORMAL=N
-SPACESHIP_VI_MODE_COLOR=black
 SPACESHIP_TIME_SHOW=true
-SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery vi_mode jobs exit_code char)
+SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery jobs exit_code char)
 
-# HELPERs
+# HELPERS
 ################################################################################
 
 print_line() {
@@ -87,7 +84,7 @@ ssh() {
     command ssh "$@"
     RESULT=$?
     [ -f $HOME/.base16_theme ] && source $HOME/.base16_theme
-    return RESULT
+    return $RESULT
 }
 
 # Install Homebrew
@@ -120,7 +117,7 @@ install_linux_build_essentials() {
 install_homebrew() {
   if ! is_homebrew_installed
   then
-    if [ $MACHINE_TYPE = Linux ]
+    if [ "$MACHINE_TYPE" = Linux ]
     then
       install_linux_build_essentials
     fi
@@ -137,7 +134,7 @@ install_homebrew() {
 
 install_cli_tools() {
   brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
-  brew_install_or_upgrade -f gdu 
+  brew_install_or_upgrade -f gdu
   brew link --overwrite gdu  # if you have coreutils installed as well
   # Install fzf key bindings
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
@@ -195,7 +192,7 @@ activate_antigen() {
       antigen bundle zsh-users/zsh-autosuggestions
       antigen bundle zsh-users/zsh-syntax-highlighting
       antigen bundle zsh-users/zsh-history-substring-search
-      antigen theme denysdovhan/spaceship-prompt
+      antigen theme spaceship-prompt/spaceship-prompt
       antigen apply
     fi
   fi
@@ -204,21 +201,21 @@ activate_antigen() {
 # BASE16_SHELL
 ################################################################################
 install_base16_shell() {
-  git_install_or_update $BASE16_SHELL_DIRECTORY "chriskempson/base16-shell.git"
+  git_install_or_update "$BASE16_SHELL" "chriskempson/base16-shell.git"
   activate_base16_shell
 }
 
 uninstall_base16_shell() {
   rm ~/.vimrc_background &>/dev/null
   rm ~/.base16_theme &>/dev/null
-  rm -rf $BASE16_SHELL_DIRECTORY &>/dev/null
+  rm -rf $BASE16_SHELL &>/dev/null
 }
 
 activate_base16_shell() {
-  if [ -d $BASE16_SHELL_DIRECTORY ]
+  if [ -d $BASE16_SHELL ]
   then
-    [ -n $PS1 ] && [ -s $BASE16_SHELL_DIRECTORY/profile_helper.sh ] && eval "$($BASE16_SHELL_DIRECTORY/profile_helper.sh)"
-    [ ! -f $HOME/.base16_theme ] && eval "base16_solarized-dark"
+    [ -f "$BASE16_SHELL/profile_helper.sh" ] && source "$BASE16_SHELL/profile_helper.sh"
+    [ ! -f $HOME/.base16_theme ] && eval "base16_onedark"
   fi
 }
 
@@ -400,10 +397,10 @@ update_auto_completions() {
 setopt nobeep
 
 update_auto_completions # should be before antigen
-activate_antigen
 activate_cli_tools
-activate_asdf
+activate_antigen
 activate_base16_shell
+activate_asdf
 
 myzsh_keybindings
 
