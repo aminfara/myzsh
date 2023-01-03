@@ -14,6 +14,11 @@ activate_homebrew() {
   true
 }
 
+activate_pyenv() {
+  command -v pyenv >/dev/null && eval "$(pyenv init -)"
+  true
+}
+
 activate_n() {
   [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
   true
@@ -27,6 +32,7 @@ activate_java() {
     export JAVA_HOME
     export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
   fi
+  true
 }
 
 # SET PARAMETERS
@@ -36,5 +42,6 @@ export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 
 activate_homebrew
-activate_java
+activate_pyenv
 activate_n
+activate_java

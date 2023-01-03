@@ -240,48 +240,45 @@ activate_asdf() {
   fi
 }
 
+# Python
+################################################################################
+
 install_python() {
   # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
-  brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk
-  install_asdf
-  print_line "Install asdf python plugin"
-  asdf plugin add python
-  path_backup=$PATH
-  # TODO: remove on resolution of https://github.com/pyenv/pyenv/issues/2159
-  if [ $MACHINE_TYPE = Linux ]
-  then
-    export PATH=$(echo $PATH | sed -e 's|/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:||')
-  fi
+  brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk pyenv
   print_line "Installing python $1"
-  asdf install python $1
-  asdf global python $1
-  asdf reshim python
-  export PATH=$path_backup
-  activate_asdf
+  pyenv install $1
+  pyenv global $1
+  activate_pyenv
   python3 -m pip install --upgrade pip
-  asdf reshim python
-  echo "python version:"
+  echo "Python version:"
   python --version
 }
 
+# Node
+################################################################################
+
 install_node() {
   brew_install_or_upgrade n
-  print_line "Installing nodejs $1"
+  print_line "Installing NodeJS $1"
   n $1
   activate_n
-  echo "nodejs version:"
+  echo "NodeJS version:"
   node --version
 }
+
+# Java
+################################################################################
 
 install_java() {
   install_homebrew
   brew tap homebrew/cask-versions
   brew_install_or_upgrade --cask temurin17
-  echo "java version:"
+  echo "Java version:"
   java -version
 }
 
-# NVIM
+# Neovim
 ################################################################################
 install_neovim() {
   brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
