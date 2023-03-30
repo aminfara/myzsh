@@ -409,3 +409,5 @@ myzsh_keybindings
 export PATH=$HOME/.local/bin:$PATH
 
 date
+
+source /Users/ali/.docker/init-zsh.sh || true # Added by Docker Desktop

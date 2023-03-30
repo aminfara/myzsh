@@ -38,6 +38,11 @@ local plugins = {
     opts = overrides.nvimtree,
   },
 
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = overrides.telescope,
+  },
+
   -- Install a plugin
   {
     "max397574/better-escape.nvim",

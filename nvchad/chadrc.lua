@@ -10,6 +10,15 @@ M.ui = {
 
   hl_override = highlights.override,
   hl_add = highlights.add,
+
+  statusline = {
+    theme = "default",
+    separator_style = "block",
+  },
+
+  telescope = {
+    style = "bordered",
+  },
 }
 
 M.plugins = "custom.plugins"
