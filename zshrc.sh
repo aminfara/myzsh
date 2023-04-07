@@ -396,7 +396,7 @@ setopt nobeep
 update_auto_completions # should be before antigen
 activate_cli_tools
 activate_antigen
-activate_base16_shell
+# activate_base16_shell
 activate_asdf
 
 myzsh_keybindings
