@@ -1,7 +1,7 @@
 case $(uname -s) in
   Linux*)     MACHINE_TYPE=Linux;;
   Darwin*)    MACHINE_TYPE=Mac;;
-  *)          MACHINE_TPPE=Unknown
+  *)          MACHINE_TYPE=Unknown
 esac
 
 if [ $MACHINE_TYPE = "Unknown" ]
@@ -15,22 +15,21 @@ fi
 
 MYZSH_INSTALLED_DIR=$HOME/.myzsh
 ANTIGEN_DIRECTORY=$HOME/.antigen
-BASE16_SHELL=$HOME/.config/base16-shell
-ASDF_DIRECTORY=$HOME/.asdf
-NPM_DIRECTORY=$HOME/.npm
 
-SPACESHIP_GIT_SYMBOL="⎇  "
-SPACESHIP_DIR_TRUNC=0
-SPACESHIP_DIR_TRUNC_REPO=false
-SPACESHIP_TIME_SHOW=true
-SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery jobs exit_code char)
+export NPM_DIRECTORY=$HOME/.npm
+
+export SPACESHIP_GIT_SYMBOL="⎇  "
+export SPACESHIP_DIR_TRUNC=0
+export SPACESHIP_DIR_TRUNC_REPO=false
+export SPACESHIP_TIME_SHOW=true
+export SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery jobs exit_code char)
 
 # HELPERS
 ################################################################################
 
 print_line() {
   echo
-  echo $@
+  echo "$@"
   echo "--------------------------------------------------------------------------------"
 }
 
@@ -38,9 +37,9 @@ is_homebrew_installed() {
   if [ ! -v BREW_INSTALLED ]
   then
     type brew &>/dev/null
-    export BREW_INSTALLED=$?
+    export BREW_INSTALLED="$?"
   fi
-  return $BREW_INSTALLED
+  return "$BREW_INSTALLED"
 }
 
 brew_install_or_upgrade() {
@@ -48,10 +47,10 @@ brew_install_or_upgrade() {
   brew ls "$@" &>/dev/null
   if [ "$?" -eq "0" ]
   then
-    print_line "Brew upgrading $@"
+    print_line "Brew upgrading " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$@"
   else
-    print_line "Brew installing $@"
+    print_line "Brew installing " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew install "$@"
   fi
 }
@@ -59,7 +58,7 @@ brew_install_or_upgrade() {
 brew_uninstall() {
   if is_homebrew_installed
   then
-    print_line "Brew uninstalling $@"
+    print_line "Brew uninstalling " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall --force "$@"
   else
     echo "Homebrew is not installed"
@@ -78,13 +77,6 @@ git_install_or_update() {
     git pull
     popd &>/dev/null
   fi
-}
-
-ssh() {
-    command ssh "$@"
-    RESULT=$?
-    [ -f $HOME/.base16_theme ] && source $HOME/.base16_theme
-    return $RESULT
 }
 
 # Install Homebrew
@@ -144,7 +136,8 @@ install_cli_tools() {
 }
 
 uninstall_cli_tools() {
-  brew_uninstall git fd ripgrep fzf htop jq gnupg tree tmux
+  brew_uninstall gdu git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew unlink gdu
   [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
 }
 
@@ -195,48 +188,6 @@ activate_antigen() {
       antigen theme spaceship-prompt/spaceship-prompt
       antigen apply
     fi
-  fi
-}
-
-# BASE16_SHELL
-################################################################################
-install_base16_shell() {
-  git_install_or_update "$BASE16_SHELL" "chriskempson/base16-shell.git"
-  activate_base16_shell
-}
-
-uninstall_base16_shell() {
-  rm ~/.vimrc_background &>/dev/null
-  rm ~/.base16_theme &>/dev/null
-  rm -rf $BASE16_SHELL &>/dev/null
-}
-
-activate_base16_shell() {
-  if [ -d $BASE16_SHELL ]
-  then
-    [ -f "$BASE16_SHELL/profile_helper.sh" ] && source "$BASE16_SHELL/profile_helper.sh"
-    [ ! -f $HOME/.base16_theme ] && eval "base16_onedark"
-  fi
-}
-
-# ASDF
-################################################################################
-install_asdf() {
-  brew_install_or_upgrade asdf
-  activate_asdf
-}
-
-uninstall_asdf() {
-  brew_uninstall asdf
-  rm -rf $ASDF_DIRECTORY
-}
-
-activate_asdf() {
-  if is_homebrew_installed
-  then
-    ASDF_SHELL=$(brew --prefix asdf)/libexec/asdf.sh
-    [ -f "$ASDF_SHELL" ] && source $ASDF_SHELL
-    [ -f "$ASDF_DIRECTORY/plugins/java/set-java-home.zsh" ] && source "$ASDF_DIRECTORY/plugins/java/set-java-home.zsh"
   fi
 }
 
@@ -396,11 +347,8 @@ setopt nobeep
 update_auto_completions # should be before antigen
 activate_cli_tools
 activate_antigen
-# activate_base16_shell
-activate_asdf
 
 myzsh_keybindings
-
 
 [ -x "$HOME/.vocab" ] && $HOME/.vocab
 
@@ -409,5 +357,3 @@ myzsh_keybindings
 export PATH=$HOME/.local/bin:$PATH
 
 date
-
-source /Users/ali/.docker/init-zsh.sh || true # Added by Docker Desktop

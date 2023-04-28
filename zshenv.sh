@@ -4,6 +4,7 @@
 export LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
 export HOMEBREW_DIRECTORY=/opt/homebrew
 export N_PREFIX="$HOME/.n"
+export DOCKER_DIRECTORY="$HOME/.docker"
 
 # HELPERS
 ################################################################################
@@ -35,6 +36,10 @@ activate_java() {
   true
 }
 
+activate_docker() {
+  [ -f "$DOCKER_DIRECTORY/init-zsh.sh" ] && (source "$DOCKER_DIRECTORY/init-zsh.sh" || true)
+}
+
 # SET PARAMETERS
 ################################################################################
 
@@ -45,3 +50,4 @@ activate_homebrew
 activate_pyenv
 activate_n
 activate_java
+activate_docker
