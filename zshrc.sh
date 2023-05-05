@@ -33,15 +33,6 @@ print_line() {
   echo "--------------------------------------------------------------------------------"
 }
 
-is_homebrew_installed() {
-  if [ ! -v BREW_INSTALLED ]
-  then
-    type brew &>/dev/null
-    export BREW_INSTALLED="$?"
-  fi
-  return "$BREW_INSTALLED"
-}
-
 brew_install_or_upgrade() {
   install_homebrew
   brew ls "$@" &>/dev/null

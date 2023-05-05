@@ -2,17 +2,27 @@
 ################################################################################
 
 export LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
-export HOMEBREW_DIRECTORY=/opt/homebrew
+export HOMEBREW_DIRECTORY_ARCH=/opt/homebrew
+export HOMEBREW_DIRECTORY_X86=/usr/local/Homebrew
 export N_PREFIX="$HOME/.n"
 export DOCKER_DIRECTORY="$HOME/.docker"
+export ASDF_DIRECTORY="$HOME/.asdf"
 
 # HELPERS
 ################################################################################
 
-activate_homebrew() {
-  [ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  [ -d $HOMEBREW_DIRECTORY/bin ] && eval "$($HOMEBREW_DIRECTORY/bin/brew shellenv)"
-  true
+[ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -d $HOMEBREW_DIRECTORY_ARCH/bin ] && eval "$($HOMEBREW_DIRECTORY_ARCH/bin/brew shellenv)"
+[ -d $HOMEBREW_DIRECTORY_X86/bin ] && eval "$($HOMEBREW_DIRECTORY_X86/bin/brew shellenv)"
+true
+
+is_homebrew_installed() {
+  if [ ! -v BREW_INSTALLED ]
+  then
+    type brew &>/dev/null
+    export BREW_INSTALLED="$?"
+  fi
+  return $BREW_INSTALLED
 }
 
 activate_pyenv() {
@@ -22,6 +32,14 @@ activate_pyenv() {
 
 activate_n() {
   [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
+  true
+}
+
+activate_asdf() {
+  if is_homebrew_installed
+  then
+    . "$(brew --prefix asdf)/libexec/asdf.sh"
+  fi
   true
 }
 
@@ -46,8 +64,8 @@ activate_docker() {
 export LC_ALL=en_AU.UTF-8
 export LANG=en_AU.UTF-8
 
-activate_homebrew
 activate_pyenv
 activate_n
+activate_asdf
 activate_java
 activate_docker
