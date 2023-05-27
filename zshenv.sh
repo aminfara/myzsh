@@ -55,6 +55,11 @@ activate_java() {
   true
 }
 
+activate_rust() {
+  [ -d "$HOME/.cargo" ] && . "$HOME/.cargo/env"
+  true
+}
+
 activate_docker() {
   [ -f "$DOCKER_DIRECTORY/init-zsh.sh" ] && (source "$DOCKER_DIRECTORY/init-zsh.sh" || true)
 }
@@ -68,5 +73,6 @@ export LANG=en_AU.UTF-8
 activate_pyenv
 activate_n
 activate_asdf
+activate_rust
 activate_java
 activate_docker
