@@ -39,7 +39,7 @@ activate_asdf() {
   if is_homebrew_installed
   then
     asdf_activation_file="$(brew --prefix asdf)/libexec/asdf.sh"
-    [ -f "$asdf_activation" ] && . "$asdf_activation"
+    [ -f "$asdf_activation_file" ] && . "$asdf_activation_file"
   fi
   true
 }
