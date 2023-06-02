@@ -21,6 +21,7 @@ is_homebrew_installed() {
   then
     type brew &>/dev/null
     export BREW_INSTALLED="$?"
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
   fi
   return $BREW_INSTALLED
 }
