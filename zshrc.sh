@@ -13,16 +13,27 @@ fi
 # CONFIGURATIONS
 ################################################################################
 
-MYZSH_INSTALLED_DIR=$HOME/.myzsh
-ANTIGEN_DIRECTORY=$HOME/.antigen
-
+export MYZSH_INSTALLED_DIR=$HOME/.myzsh
+export LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
+export HOMEBREW_DIRECTORY_ARCH=/opt/homebrew
+export HOMEBREW_DIRECTORY_X86=/usr/local/Homebrew
+export N_PREFIX="$HOME/.n"
 export NPM_DIRECTORY=$HOME/.npm
+export ASDF_DIRECTORY="$HOME/.asdf"
+export ANTIGEN_DIRECTORY=$HOME/.antigen
+export DOCKER_DIRECTORY="$HOME/.docker"
 
 export SPACESHIP_GIT_SYMBOL="⎇  "
 export SPACESHIP_DIR_TRUNC=0
 export SPACESHIP_DIR_TRUNC_REPO=false
 export SPACESHIP_TIME_SHOW=true
 export SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery jobs exit_code char)
+
+# SET PARAMETERS
+################################################################################
+
+export LC_ALL=en_AU.UTF-8
+export LANG=en_AU.UTF-8
 
 # HELPERS
 ################################################################################
@@ -31,6 +42,21 @@ print_line() {
   echo
   echo "$@"
   echo "--------------------------------------------------------------------------------"
+}
+
+[ -d $LINUXBREW_DIRECTORY/bin ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -d $HOMEBREW_DIRECTORY_ARCH/bin ] && eval "$($HOMEBREW_DIRECTORY_ARCH/bin/brew shellenv)"
+[ -d $HOMEBREW_DIRECTORY_X86/bin ] && eval "$($HOMEBREW_DIRECTORY_X86/bin/brew shellenv)"
+true
+
+is_homebrew_installed() {
+  if [ ! -v BREW_INSTALLED ]
+  then
+    type brew &>/dev/null
+    export BREW_INSTALLED="$?"
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  fi
+  return $BREW_INSTALLED
 }
 
 brew_install_or_upgrade() {
@@ -182,6 +208,18 @@ activate_antigen() {
   fi
 }
 
+# ASDF
+################################################################################
+
+activate_asdf() {
+  if is_homebrew_installed
+  then
+    asdf_activation_file="$(brew --prefix asdf)/libexec/asdf.sh"
+    [ -f "$asdf_activation_file" ] && . "$asdf_activation_file"
+  fi
+  true
+}
+
 # Python
 ################################################################################
 
@@ -197,6 +235,11 @@ install_python() {
   python --version
 }
 
+activate_python() {
+  command -v pyenv >/dev/null && eval "$(pyenv init -)"
+  true
+}
+
 # Node
 ################################################################################
 
@@ -209,6 +252,20 @@ install_node() {
   node --version
 }
 
+activate_node() {
+  [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
+  true
+}
+
+
+# Rust
+################################################################################
+
+activate_rust() {
+  [ -d "$HOME/.cargo" ] && . "$HOME/.cargo/env"
+  true
+}
+
 # Java
 ################################################################################
 
@@ -218,6 +275,24 @@ install_java() {
   brew_install_or_upgrade --cask temurin17
   echo "Java version:"
   java -version
+}
+
+activate_java() {
+  /usr/libexec/java_home &>/dev/null
+  JAVA_EXISTS=$?
+  if [ $JAVA_EXISTS -eq 0 ]; then
+    JAVA_HOME=$(/usr/libexec/java_home)
+    export JAVA_HOME
+    export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
+  fi
+  true
+}
+
+# Docker
+################################################################################
+
+activate_docker() {
+  [ -f "$DOCKER_DIRECTORY/init-zsh.sh" ] && (source "$DOCKER_DIRECTORY/init-zsh.sh" || true)
 }
 
 # Neovim
@@ -338,6 +413,12 @@ setopt nobeep
 update_auto_completions # should be before antigen
 activate_cli_tools
 activate_antigen
+activate_python
+activate_node
+activate_asdf
+activate_rust
+activate_java
+activate_docker
 
 myzsh_keybindings
 
