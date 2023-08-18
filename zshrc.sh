@@ -1,3 +1,4 @@
+#!/bin/bash
 case $(uname -s) in
   Linux*)     MACHINE_TYPE=Linux;;
   Darwin*)    MACHINE_TYPE=Mac;;
@@ -17,9 +18,9 @@ export MYZSH_INSTALLED_DIR=$HOME/.myzsh
 export LINUXBREW_DIRECTORY=/home/linuxbrew/.linuxbrew
 export HOMEBREW_DIRECTORY_ARCH=/opt/homebrew
 export HOMEBREW_DIRECTORY_X86=/usr/local/Homebrew
+export RTX_PREFIX="$HOME/.local/share/rtx"
 export N_PREFIX="$HOME/.n"
 export NPM_DIRECTORY=$HOME/.npm
-export ASDF_DIRECTORY="$HOME/.asdf"
 export ANTIGEN_DIRECTORY=$HOME/.antigen
 export DOCKER_DIRECTORY="$HOME/.docker"
 
@@ -67,7 +68,7 @@ brew_install_or_upgrade() {
     print_line "Brew upgrading " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$@"
   else
-    print_line "Brew installing " "$@"
+    print_line "Brew installing r" "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew install "$@"
   fi
 }
@@ -76,7 +77,7 @@ brew_uninstall() {
   if is_homebrew_installed
   then
     print_line "Brew uninstalling " "$@"
-    HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall --force "$@"
+    HOMEBREW_NO_AUTO_UPDATE=1 brew uninstall "$@"
   else
     echo "Homebrew is not installed"
     return 1
@@ -142,6 +143,7 @@ install_homebrew() {
 ################################################################################
 
 install_cli_tools() {
+  brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk
   brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
   brew_install_or_upgrade -f gdu
   brew link --overwrite gdu  # if you have coreutils installed as well
@@ -154,6 +156,7 @@ install_cli_tools() {
 
 uninstall_cli_tools() {
   brew_uninstall gdu git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew_uninstall openssl readline sqlite3 xz zlib tcl-tk
   brew unlink gdu
   [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
 }
@@ -208,17 +211,30 @@ activate_antigen() {
   fi
 }
 
-# ASDF
+# RTX
 ################################################################################
 
-activate_asdf() {
+myzsh_install_rtx() {
+  brew_install_or_upgrade rtx
+  rtx_activation_file="$(brew --prefix rtx)/bin/rtx"
+  eval "$($rtx_activation_file install)"
+  myzsh_activate_rtx
+}
+
+myzsh_uninstall_rtx() {
+  brew_uninstall rtx
+  rm -rf "$RTX_PREFIX"
+}
+
+myzsh_activate_rtx() {
   if is_homebrew_installed
   then
-    asdf_activation_file="$(brew --prefix asdf)/libexec/asdf.sh"
-    [ -f "$asdf_activation_file" ] && . "$asdf_activation_file"
+    rtx_activation_file="$(brew --prefix rtx)/bin/rtx"
+    [ -f "$rtx_activation_file" ] && eval "$($rtx_activation_file activate zsh)"
   fi
   true
 }
+
 
 # Python
 ################################################################################
@@ -413,9 +429,9 @@ setopt nobeep
 update_auto_completions # should be before antigen
 activate_cli_tools
 activate_antigen
-activate_python
-activate_node
-activate_asdf
+myzsh_activate_rtx
+# activate_python
+# activate_node
 activate_rust
 activate_java
 activate_docker
