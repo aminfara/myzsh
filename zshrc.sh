@@ -142,7 +142,7 @@ install_homebrew() {
 # CLI goodies
 ################################################################################
 
-install_cli_tools() {
+myzsh_install_cli_tools() {
   brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk
   brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
   brew_install_or_upgrade -f gdu
@@ -151,17 +151,17 @@ install_cli_tools() {
   $(brew --prefix fzf)/install --key-bindings --completion --no-update-rc --no-bash --no-fish
   [ -f $HOME/.tmux.conf ] || ln -s $MYZSH_INSTALLED_DIR/tmux.conf $HOME/.tmux.conf
   cp $MYZSH_INSTALLED_DIR/gitconfig-template $HOME/.gitconfig
-  activate_cli_tools
+  myzsh_activate_cli_tools
 }
 
-uninstall_cli_tools() {
+myzsh_uninstall_cli_tools() {
   brew_uninstall gdu git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
   brew_uninstall openssl readline sqlite3 xz zlib tcl-tk
   brew unlink gdu
   [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
 }
 
-activate_cli_tools () {
+myzsh_activate_cli_tools () {
   if [ -f $HOME/.fzf.zsh ]
   then
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -175,17 +175,17 @@ activate_cli_tools () {
 # ANTIGEN
 ################################################################################
 
-install_antigen() {
+myzsh_install_antigen() {
   brew_install_or_upgrade antigen
-  activate_antigen
+  myzsh_activate_antigen
 }
 
-uninstall_antigen() {
+myzsh_uninstall_antigen() {
   brew_uninstall antigen
   rm -rf $ANTIGEN_DIRECTORY &>/dev/null
 }
 
-activate_antigen() {
+myzsh_activate_antigen() {
   type antigen &>/dev/null && return
 
   if is_homebrew_installed
@@ -239,7 +239,7 @@ myzsh_activate_rtx() {
 # Python
 ################################################################################
 
-install_python() {
+myzsh_install_python() {
   # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
   brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk pyenv
   print_line "Installing python $1"
@@ -251,7 +251,7 @@ install_python() {
   python --version
 }
 
-activate_python() {
+myzsh_activate_python() {
   command -v pyenv >/dev/null && eval "$(pyenv init -)"
   true
 }
@@ -259,16 +259,16 @@ activate_python() {
 # Node
 ################################################################################
 
-install_node() {
+myzsh_install_node() {
   brew_install_or_upgrade n
   print_line "Installing NodeJS $1"
   n $1
-  activate_n
+  myzsh_activate_node
   echo "NodeJS version:"
   node --version
 }
 
-activate_node() {
+myzsh_activate_node() {
   [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
   true
 }
@@ -277,7 +277,7 @@ activate_node() {
 # Rust
 ################################################################################
 
-activate_rust() {
+myzsh_activate_rust() {
   [ -d "$HOME/.cargo" ] && . "$HOME/.cargo/env"
   true
 }
@@ -285,7 +285,7 @@ activate_rust() {
 # Java
 ################################################################################
 
-install_java() {
+myzsh_install_java() {
   install_homebrew
   brew tap homebrew/cask-versions
   brew_install_or_upgrade --cask temurin17
@@ -293,7 +293,7 @@ install_java() {
   java -version
 }
 
-activate_java() {
+myzsh_activate_java() {
   /usr/libexec/java_home &>/dev/null
   JAVA_EXISTS=$?
   if [ $JAVA_EXISTS -eq 0 ]; then
@@ -313,14 +313,14 @@ activate_docker() {
 
 # Neovim
 ################################################################################
-install_neovim() {
+myzsh_install_neovim() {
   brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
   brew_install_or_upgrade neovim stylua
   npm install -g neovim tree-sitter-cli
   python3 -m pip install pynvim
 }
 
-uninstall_neovim() {
+myzsh_uninstall_neovim() {
   brew_uninstall neovim stylua
   npm uninstall -g neovim tree-sitter-cli
   python3 -m pip uninstall -y pynvim
@@ -412,7 +412,7 @@ myzsh_keybindings() {
 # Auto completion
 ################################################################################
 
-update_auto_completions() {
+myzsh_update_auto_completions() {
   # We do not need compinit as oh-my-zsh will run compinit
   if is_homebrew_installed
   then
@@ -426,13 +426,13 @@ update_auto_completions() {
 # Turn off beep
 setopt nobeep
 
-update_auto_completions # should be before antigen
-activate_cli_tools
-activate_antigen
+myzsh_update_auto_completions # should be before antigen
+myzsh_activate_cli_tools
+myzsh_activate_antigen
 myzsh_activate_rtx
-# activate_python
-# activate_node
-activate_rust
+# myzsh_activate_python
+# myzsh_activate_node
+myzsh_activate_rust
 activate_java
 activate_docker
 
