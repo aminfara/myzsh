@@ -1,14 +1,22 @@
 #!/bin/bash
+
+# Check machine type
 case $(uname -s) in
-  Linux*)     MACHINE_TYPE=Linux;;
-  Darwin*)    MACHINE_TYPE=Mac;;
-  *)          MACHINE_TYPE=Unknown
+Linux*) MACHINE_TYPE=Linux ;;
+Darwin*)
+  if [ "$(uname -m)" = "arm64" ]; then
+    MACHINE_TYPE=Mac_aarch
+  else
+    MACHINE_TYPE=Mac_x86
+  fi
+  ;;
+*) MACHINE_TYPE=Unknown ;;
 esac
 
-if [ $MACHINE_TYPE = "Unknown" ]
-then
+# If the MACHINE_TYPE is Unknown exit
+if [ $MACHINE_TYPE = "Unknown" ]; then
   echo "Machine type '$MACHINE_TYPE' is not supported."
-  return
+  exit 1
 fi
 
 # CONFIGURATIONS
@@ -144,7 +152,7 @@ install_homebrew() {
 
 myzsh_install_cli_tools() {
   brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk
-  brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew_install_or_upgrade git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck shfmt bottom
   brew_install_or_upgrade -f gdu
   brew link --overwrite gdu  # if you have coreutils installed as well
   # Install fzf key bindings
@@ -155,7 +163,7 @@ myzsh_install_cli_tools() {
 }
 
 myzsh_uninstall_cli_tools() {
-  brew_uninstall gdu git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck bottom
+  brew_uninstall gdu git wget fd ripgrep fzf htop jq gnupg tree tmux lazygit shellcheck shfmt bottom
   brew_uninstall openssl readline sqlite3 xz zlib tcl-tk
   brew unlink gdu
   [ -f $HOME/.fzf.zsh ] && rm $HOME/.fzf.zsh || true
@@ -235,7 +243,6 @@ myzsh_activate_rtx() {
   true
 }
 
-
 # Python
 ################################################################################
 
@@ -272,7 +279,6 @@ myzsh_activate_node() {
   [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
   true
 }
-
 
 # Rust
 ################################################################################
@@ -394,7 +400,6 @@ myzsh_keybindings() {
       zle -N zle-line-finish
   fi
 
-
   # From old bindings
 
   # bind UP and DOWN arrow keys
@@ -433,7 +438,7 @@ myzsh_activate_rtx
 # myzsh_activate_python
 # myzsh_activate_node
 myzsh_activate_rust
-activate_java
+# activate_java
 activate_docker
 
 myzsh_keybindings
