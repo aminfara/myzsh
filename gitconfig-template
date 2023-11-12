@@ -1,14 +1,19 @@
 [user]
     email = ali.aminfar@gmail.com
     name = Ali 🚶
-[color]
-    ui = auto
 [core]
     pager = less -FMriX
     excludesfile = /home/aminfara/.gitignore_global
-[push]
-    default = simple
 [alias]
     dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
+[color]
+    ui = auto
+[push]
+    default = simple
 [pull]
-	ff = only
+    ff = only
+    rebase = true
+[merge]
+    autoStash = true
+[rebase]
+    autoStash = true
