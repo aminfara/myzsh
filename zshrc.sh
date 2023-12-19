@@ -56,7 +56,7 @@ print_line() {
   echo "--------------------------------------------------------------------------------"
 }
 
-install_linux_build_essentials() {
+myzsh_install_linux_build_essentials() {
   print_line "Installing Linux build essentials"
   if command -v "yum" &>/dev/null; then
     # AL2
@@ -100,7 +100,7 @@ myzsh_is_homebrew_installed() {
 myzsh_install_homebrew() {
   if ! myzsh_is_homebrew_installed; then
     if [ "$MACHINE_TYPE" = Linux ]; then
-      install_linux_build_essentials
+      myzsh_install_linux_build_essentials
     fi
     print_line "Installing homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -118,7 +118,7 @@ myzsh_brew_install_or_upgrade() {
     print_line "Brew upgrading " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$@"
   else
-    print_line "Brew installing r" "$@"
+    print_line "Brew installing " "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew install "$@"
   fi
 }
@@ -318,18 +318,26 @@ myzsh_uninstall_neovim() {
 # Mac key repeat for vscode
 ################################################################################
 
-fix_key_repeat_for_vscode() {
+myzsh_fix_key_repeat_for_vscode() {
   if [ ! $MACHINE_TYPE = Linux ]; then
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
   fi
+}
+
+# Keybindings
+################################################################################
+
+myzsh_keybindings() {
+  bindkey "$terminfo[kcuu1]" history-substring-search-up
+  bindkey "$terminfo[kcud1]" history-substring-search-down
 }
 
 # Turn off beep
 setopt nobeep
 
 myzsh_activate_homebrew
-myzsh_activate_cli_tools
 myzsh_activate_antigen
+myzsh_activate_cli_tools
 myzsh_activate_rtx
 myzsh_activate_python
 myzsh_activate_node
@@ -337,7 +345,7 @@ myzsh_activate_rust
 myzsh_activate_java
 myzsh_activate_docker
 
-# myzsh_keybindings
+myzsh_keybindings
 
 [ -x "$HOME/.vocab" ] && "$HOME"/.vocab
 
