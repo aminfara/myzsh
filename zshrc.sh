@@ -303,10 +303,17 @@ myzsh_activate_docker() {
   [ -f "$DOCKER_DIRECTORY/init-zsh.sh" ] && (source "$DOCKER_DIRECTORY/init-zsh.sh" || true)
 }
 
+# Nerd Fonts
+################################################################################
+myzsh_install_nerd_fonts() {
+  myzsh_brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
+  myzsh_brew_install_or_upgrade homebrew/cask-fonts/font-fira-code-nerd-font
+}
+
 # Neovim
 ################################################################################
 myzsh_install_neovim() {
-  myzsh_brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
+  myzsh_install_nerd_fonts
   myzsh_brew_install_or_upgrade neovim stylua
   npm install -g neovim tree-sitter-cli
   python3 -m pip install pynvim
