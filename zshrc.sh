@@ -331,7 +331,7 @@ myzsh_fix_key_repeat_for_vscode() {
 
 myzsh_keybindings() {
   # shellcheck disable=SC2154
-  bindkey "${terminf[kcuu1]}" history-substring-search-up
+  bindkey "${terminfo[kcuu1]}" history-substring-search-up
   # shellcheck disable=SC2154
   bindkey "${terminfo[kcud1]}" history-substring-search-down
 }
