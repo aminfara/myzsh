@@ -35,12 +35,6 @@ export DOCKER_DIRECTORY="$HOME/.docker"
 export N_PREFIX="$HOME/.n"
 export NPM_DIRECTORY=$HOME/.npm
 
-export SPACESHIP_GIT_SYMBOL="⎇  "
-export SPACESHIP_DIR_TRUNC=0
-export SPACESHIP_DIR_TRUNC_REPO=false
-export SPACESHIP_TIME_SHOW=true
-export SPACESHIP_PROMPT_ORDER=(time user dir host git node venv exec_time line_sep battery jobs exit_code char)
-
 # SET PARAMETERS
 ################################################################################
 
@@ -84,7 +78,7 @@ myzsh_install_linux_build_essentials() {
 function myzsh_activate_homebrew() {
   if [ -d "$HOMEBREW_DIRECTORY/bin" ]; then
     eval "$("$HOMEBREW_DIRECTORY"/bin/brew shellenv)"
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+    FPATH="$HOMEBREW_DIRECTORY/share/zsh/site-functions:${FPATH}"
     export HOMEBREW_INSTALLED=0
   fi
 }
@@ -179,24 +173,40 @@ myzsh_uninstall_antigen() {
 myzsh_activate_antigen() {
   type antigen &>/dev/null && return
 
-  if myzsh_is_homebrew_installed; then
-    ANTIGEN_EXEC_DIRECTORY=$(brew --prefix antigen)/share/antigen
-    if [ -f "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh ]; then
-      # shellcheck disable=SC1091
-      source "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh
-      antigen use oh-my-zsh
-      antigen bundle key-bindings
-      if [ $MACHINE_TYPE = "Mac" ]; then
-        antigen bundle macos
-      fi
-      antigen bundle git
-      antigen bundle zsh-users/zsh-autosuggestions
-      antigen bundle zsh-users/zsh-syntax-highlighting
-      antigen bundle zsh-users/zsh-history-substring-search
-      antigen theme spaceship-prompt/spaceship-prompt
-      antigen apply
+  ANTIGEN_EXEC_DIRECTORY="$HOMEBREW_DIRECTORY"/opt/antigen/share/antigen
+  if [ -f "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh ]; then
+    # shellcheck disable=SC1091
+    source "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh
+    antigen use oh-my-zsh
+    antigen bundle key-bindings
+    if [ $MACHINE_TYPE = "Mac" ]; then
+      antigen bundle macos
     fi
+    antigen bundle git
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-history-substring-search
+    antigen apply
   fi
+}
+
+# Starship (shell prompt)
+################################################################################
+
+myzsh_install_starship() {
+  myzsh_brew_install_or_upgrade starship
+  myzsh_activate_starship
+}
+
+myzsh_uninstall_starship() {
+  myzsh_brew_uninstall starship
+}
+
+myzsh_activate_starship() {
+  export STARSHIP_CONFIG="$MYZSH_INSTALLED_DIR"/starship.toml
+  starship_activation_file="$HOMEBREW_DIRECTORY"/opt/starship/bin/starship
+  [ -f "$starship_activation_file" ] && eval "$($starship_activation_file init zsh)"
+  true
 }
 
 # RTX
@@ -215,10 +225,8 @@ myzsh_uninstall_rtx() {
 }
 
 myzsh_activate_rtx() {
-  if myzsh_is_homebrew_installed; then
-    rtx_activation_file="$(brew --prefix rtx)/bin/rtx"
-    [ -f "$rtx_activation_file" ] && eval "$($rtx_activation_file activate zsh)"
-  fi
+  rtx_activation_file="$HOMEBREW_DIRECTORY"/opt/rtx/bin/rtx
+  [ -f "$rtx_activation_file" ] && eval "$($rtx_activation_file activate zsh)"
   true
 }
 
@@ -238,7 +246,8 @@ myzsh_install_python() {
 }
 
 myzsh_activate_python() {
-  command -v pyenv >/dev/null && eval "$(pyenv init -)"
+  pyenv_activation_file="$HOMEBREW_DIRECTORY"/opt/pyenv/bin/pyenv
+  [ -f "$pyenv_activation_file" ] && eval "$($pyenv_activation_file init -)"
   true
 }
 
@@ -280,13 +289,9 @@ myzsh_install_java() {
 }
 
 myzsh_activate_java() {
-  /usr/libexec/java_home &>/dev/null
-  JAVA_EXISTS=$?
-  if [ $JAVA_EXISTS -eq 0 ]; then
-    JAVA_HOME=$(/usr/libexec/java_home)
-    export JAVA_HOME
-    export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
-  fi
+  JAVA_HOME=$(/usr/libexec/java_home 2>/dev/null)
+  export JAVA_HOME
+  export JAVA_TOOLS_OPTIONS="-Dlog4j2.formatMsgNoLookups=true"
   true
 }
 
@@ -342,6 +347,7 @@ setopt nobeep
 myzsh_activate_homebrew
 myzsh_activate_antigen
 myzsh_activate_cli_tools
+myzsh_activate_starship
 myzsh_activate_rtx
 myzsh_activate_python
 myzsh_activate_node
