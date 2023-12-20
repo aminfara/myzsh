@@ -22,7 +22,7 @@ fi
 # Set HOMEBREW_DIRECTORY based on MACHINE_TYPE
 case $MACHINE_TYPE in
 Mac_aarch) export HOMEBREW_DIRECTORY=/opt/homebrew ;;
-Mac_x86) export HOMEBREW_DIRECTORY=/usr/local/Homebrew ;;
+Mac_x86) export HOMEBREW_DIRECTORY=/usr/local ;;
 Linux) export HOMEBREW_DIRECTORY=/home/linuxbrew/.linuxbrew ;;
 esac
 
@@ -76,8 +76,8 @@ myzsh_install_linux_build_essentials() {
 ################################################################################
 
 function myzsh_activate_homebrew() {
-  if [ -d "$HOMEBREW_DIRECTORY/bin" ]; then
-    eval "$("$HOMEBREW_DIRECTORY"/bin/brew shellenv)"
+  if [ -d "$HOMEBREW_DIRECTORY"/Homebrew/bin ]; then
+    eval "$("$HOMEBREW_DIRECTORY"/Homebrew/bin/brew shellenv)"
     FPATH="$HOMEBREW_DIRECTORY/share/zsh/site-functions:${FPATH}"
     export HOMEBREW_INSTALLED=0
   fi
