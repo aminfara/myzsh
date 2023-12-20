@@ -113,12 +113,11 @@ myzsh_install_homebrew() {
 
 myzsh_brew_install_or_upgrade() {
   myzsh_install_homebrew
-  brew ls "$@" &>/dev/null
-  if [ "$?" -eq "0" ]; then
-    print_line "Brew upgrading " "$@"
+  if brew ls "$@" &>/dev/null; then
+    print_line "Brew upgrading" "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$@"
   else
-    print_line "Brew installing " "$@"
+    print_line "Brew installing" "$@"
     HOMEBREW_NO_AUTO_UPDATE=1 brew install "$@"
   fi
 }
@@ -159,6 +158,7 @@ myzsh_activate_cli_tools() {
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
     bindkey "ç" fzf-cd-widget
+    # shellcheck disable=SC1091
     source "$HOME"/.fzf.zsh
   fi
 }
@@ -182,9 +182,9 @@ myzsh_activate_antigen() {
   if myzsh_is_homebrew_installed; then
     ANTIGEN_EXEC_DIRECTORY=$(brew --prefix antigen)/share/antigen
     if [ -f "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh ]; then
+      # shellcheck disable=SC1091
       source "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh
       antigen use oh-my-zsh
-      antigen bundle vi-mode
       antigen bundle key-bindings
       if [ $MACHINE_TYPE = "Mac" ]; then
         antigen bundle macos
@@ -229,8 +229,8 @@ myzsh_install_python() {
   # https://github.com/pyenv/pyenv/wiki#suggested-build-environment
   myzsh_brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk pyenv
   print_line "Installing python $1"
-  pyenv install $1
-  pyenv global $1
+  pyenv install "$1"
+  pyenv global "$1"
   activate_pyenv
   python3 -m pip install --upgrade pip
   echo "Python version:"
@@ -248,14 +248,14 @@ myzsh_activate_python() {
 myzsh_install_node() {
   myzsh_brew_install_or_upgrade n
   print_line "Installing NodeJS $1"
-  n $1
+  n "$1"
   myzsh_activate_node
   echo "NodeJS version:"
   node --version
 }
 
 myzsh_activate_node() {
-  [ -d $N_PREFIX/bin ] && export PATH="$N_PREFIX/bin:$PATH"
+  [ -d "$N_PREFIX"/bin ] && export PATH="$N_PREFIX/bin:$PATH"
   true
 }
 
@@ -263,6 +263,7 @@ myzsh_activate_node() {
 ################################################################################
 
 myzsh_activate_rust() {
+  # shellcheck disable=SC1091
   [ -d "$HOME/.cargo" ] && . "$HOME/.cargo/env"
   true
 }
@@ -293,6 +294,7 @@ myzsh_activate_java() {
 ################################################################################
 
 myzsh_activate_docker() {
+  # shellcheck disable=SC1091
   [ -f "$DOCKER_DIRECTORY/init-zsh.sh" ] && (source "$DOCKER_DIRECTORY/init-zsh.sh" || true)
 }
 
@@ -328,8 +330,10 @@ myzsh_fix_key_repeat_for_vscode() {
 ################################################################################
 
 myzsh_keybindings() {
-  bindkey "$terminfo[kcuu1]" history-substring-search-up
-  bindkey "$terminfo[kcud1]" history-substring-search-down
+  # shellcheck disable=SC2154
+  bindkey "${terminf[kcuu1]}" history-substring-search-up
+  # shellcheck disable=SC2154
+  bindkey "${terminfo[kcud1]}" history-substring-search-down
 }
 
 # Turn off beep
@@ -349,6 +353,7 @@ myzsh_keybindings
 
 [ -x "$HOME/.vocab" ] && "$HOME"/.vocab
 
+# shellcheck disable=SC1091
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export PATH=$HOME/.local/bin:$PATH
