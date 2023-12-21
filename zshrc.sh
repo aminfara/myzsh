@@ -327,6 +327,7 @@ myzsh_uninstall_neovim() {
   rm -rf "$MYZSH_INSTALLED_DIR"/nvim/plugin/packer_compiled.lua
   rm -rf "$HOME"/.config/nvim
   rm -rf "$HOME"/.local/share/nvim
+  rm -rf "$HOME"/.local/state/nvim
   rm -rf "$HOME"/.cache/nvim
 }
 
