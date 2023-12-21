@@ -76,8 +76,9 @@ myzsh_install_linux_build_essentials() {
 ################################################################################
 
 function myzsh_activate_homebrew() {
-  if [ -d "$HOMEBREW_DIRECTORY"/Homebrew/bin ]; then
-    eval "$("$HOMEBREW_DIRECTORY"/Homebrew/bin/brew shellenv)"
+  HOMEBREW_EXEC="$HOMEBREW_DIRECTORY/bin/brew"
+  if [ -f "$HOMEBREW_EXEC" ]; then
+    eval "$("$HOMEBREW_EXEC" shellenv)"
     FPATH="$HOMEBREW_DIRECTORY/share/zsh/site-functions:${FPATH}"
     export HOMEBREW_INSTALLED=0
   fi
