@@ -316,19 +316,19 @@ myzsh_install_nerd_fonts() {
 myzsh_install_neovim() {
   myzsh_install_nerd_fonts
   myzsh_brew_install_or_upgrade neovim stylua
-  npm install -g neovim tree-sitter-cli
-  python3 -m pip install pynvim
 }
 
-myzsh_uninstall_neovim() {
-  myzsh_brew_uninstall neovim stylua
-  npm uninstall -g neovim tree-sitter-cli
-  python3 -m pip uninstall -y pynvim
+myzsh_cleanup_neovim() {
   rm -rf "$MYZSH_INSTALLED_DIR"/nvim/plugin/packer_compiled.lua
   rm -rf "$HOME"/.config/nvim
   rm -rf "$HOME"/.local/share/nvim
   rm -rf "$HOME"/.local/state/nvim
   rm -rf "$HOME"/.cache/nvim
+}
+
+myzsh_uninstall_neovim() {
+  myzsh_brew_uninstall neovim stylua
+  myzsh_cleanup_neovim
 }
 
 # Mac key repeat for vscode
