@@ -10,9 +10,7 @@ return {
       opts.sources = opts.sources or {}
       local cspell = require("cspell")
       local config = {
-        find_json = function(_)
-          return vim.fn.stdpath("config") .. "/cspell.json"
-        end,
+        config_file_preferred_name = ".cspell.json",
       }
       table.insert(
         opts.sources,
