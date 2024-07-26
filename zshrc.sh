@@ -307,8 +307,9 @@ myzsh_activate_docker() {
 # Nerd Fonts
 ################################################################################
 myzsh_install_nerd_fonts() {
-  myzsh_brew_install_or_upgrade homebrew/cask-fonts/font-meslo-lg-nerd-font
-  myzsh_brew_install_or_upgrade homebrew/cask-fonts/font-fira-code-nerd-font
+  myzsh_brew_install_or_upgrade font-hack-nerd-font
+  myzsh_brew_install_or_upgrade font-meslo-lg-nerd-font
+  myzsh_brew_install_or_upgrade font-fira-code-nerd-font
 }
 
 # Neovim
