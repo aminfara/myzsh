@@ -1,0 +1,83 @@
+{
+  "vim.easymotion": true,
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-e>": false
+  },
+  "vim.insertModeKeyBindingsNonRecursive": [
+    {
+      "after": ["<Esc>"],
+      "before": ["k", "j"]
+    },
+    {
+      "after": ["<Esc>"],
+      "before": ["j", "k"]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "args": "m",
+          "command": "whichkey.triggerKey"
+        }
+      ]
+    },
+    {
+      "before": ["K"],
+      "commands": ["lineBreakInsert"],
+      "silent": true
+    },
+    {
+      "after": ["<leader>", "<leader>", "s"],
+      "before": ["s"]
+    },
+    {
+      "after": ["<leader>", "<leader>", "2", "s"],
+      "before": ["S"]
+    }
+  ],
+  "vim.useSystemClipboard": true,
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "args": "m",
+          "command": "whichkey.triggerKey"
+        }
+      ]
+    },
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    },
+    {
+      "after": ["<leader>", "<leader>", "s"],
+      "before": ["s"]
+    },
+    {
+      "after": ["<leader>", "<leader>", "2", "s"],
+      "before": ["S"]
+    },
+    {
+      "after": ["p", "g", "v", "y"],
+      "before": ["p"]
+    }
+  ]
+}
