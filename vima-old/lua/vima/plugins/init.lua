@@ -1,154 +1,150 @@
--- https://github.com/wbthomason/packer.nvim
+local present, packer = pcall(require, 'packer')
 
--- Self install packer if not found on data path
-local fn = vim.fn
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+if not present then
+    local packer_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system({
-    'git',
-    'clone',
-    '--depth',
-    '1',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path,
-  })
-  vim.cmd([[packadd packer.nvim]]) -- necessary to let us require packer on first run
-end
+    vim.notify('Bootstrapping packer.nvim . . .')
+    vim.fn.delete(packer_path, 'rf')
+    PACKER_BOOTSTRAP = vim.fn.system({
+        'git',
+        'clone',
+        'https://github.com/wbthomason/packer.nvim',
+        '--depth',
+        '20',
+        packer_path,
+    })
+    vim.cmd('packadd packer.nvim')
+    present, packer = pcall(require, 'packer')
 
-local status_ok, packer = pcall(require, 'packer')
-if not status_ok then
-  vim.notify('Failed to load packer.nvim.')
-  return
+    if present then
+        vim.notify('Packer installed successfully.')
+    else
+        error('Could not bootstrap packer!')
+        return false
+    end
 end
 
 return packer.startup({
-  function(use)
-    -- Packer can manage itself
-    use('wbthomason/packer.nvim')
+    function(use)
+        -- Packer can manage itself
+        use('wbthomason/packer.nvim')
 
-    use('nvim-lua/popup.nvim')
-    use('nvim-lua/plenary.nvim') -- utility functions used by other plugins
-    use('kyazdani42/nvim-web-devicons')
+        -- Speedup the start time
+        use('lewis6991/impatient.nvim')
 
-    --color scheme
-    use({
-      'RRethy/nvim-base16',
-      config = function()
-        require('vima.plugins.colorscheme')
-      end,
-    })
+        -- utility functions used by other plugins
 
-    -- which-key shows possible keys
-    use({
-      'folke/which-key.nvim',
-      config = function()
-        require('vima.plugins.whichkey')
-      end,
-    })
+        use('nvim-lua/plenary.nvim')
 
-    -- Treesitter syntax highlight
-    use({
-      'nvim-treesitter/nvim-treesitter',
-      run = ':TSUpdate',
-    })
-    use({ 'JoosepAlviste/nvim-ts-context-commentstring', after = { 'nvim-treesitter' } })
-    use({
-      'p00f/nvim-ts-rainbow', -- Rainbow brackets
-      after = { 'nvim-treesitter', 'nvim-ts-context-commentstring' },
-      config = function()
-        require('vima.plugins.treesitter')
-      end,
-    })
+        -- icons used by other plugins
+        use({
+            'kyazdani42/nvim-web-devicons',
+            event = 'VimEnter',
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
 
-    -- git signs
-    use({
-      'lewis6991/gitsigns.nvim',
-      config = function()
-        require('vima.plugins.gitsigns')
-      end,
-    })
+        --color scheme
+        use({
+            'RRethy/nvim-base16',
+            config = function()
+                require('vima.plugins.colorscheme')
+            end,
+            after = { 'nvim-web-devicons' },
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
 
-    -- file tree
-    use({
-      'kyazdani42/nvim-tree.lua',
-      config = function()
-        require('vima.plugins.nvimtree')
-      end,
-    })
+        -- statusline
+        use({
+            'nvim-lualine/lualine.nvim',
+            config = function()
+                require('vima.plugins.lualine')
+            end,
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
 
-    -- project
-    use({
-      'ahmedkhalf/project.nvim',
-      config = function()
-        require('vima.plugins.project')
-      end,
-    })
+        -- Treesitter syntax support
+        use({
+            'nvim-treesitter/nvim-treesitter',
+            run = function()
+                local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+                ts_update()
+            end,
+            config = function()
+                require('vima.plugins.treesitter')
+            end
+        })
 
-    -- autocomplete and snippets plugins
-    use('hrsh7th/cmp-nvim-lsp')
-    use('hrsh7th/cmp-buffer')
-    use('hrsh7th/cmp-path')
-    use('hrsh7th/cmp-cmdline')
-    use('saadparwaiz1/cmp_luasnip')
-    use('L3MON4D3/LuaSnip')
-    use('rafamadriz/friendly-snippets')
-    use({
-      'hrsh7th/nvim-cmp',
-      config = function()
-        require('vima.plugins.completion')
-      end,
-    })
+        use({
+            'andymass/vim-matchup',
+            after = { 'nvim-treesitter' },
+            setup = function()
+                -- may set any options here
+                vim.g.matchup_matchparen_offscreen = { method = "popup" }
+            end
+        })
 
-    -- language servers
-    use('neovim/nvim-lspconfig')
-    use('folke/lua-dev.nvim')
-    use('ray-x/lsp_signature.nvim')
-    use('williamboman/nvim-lsp-installer')
-    use({
-      'jose-elias-alvarez/null-ls.nvim',
-      config = function()
-        require('vima.plugins.lsp')
-      end,
-    })
+        use({
+            'p00f/nvim-ts-rainbow', -- Rainbow brackets
+            after = { 'nvim-treesitter' },
+            cond = function()
+                return not vim.g.vscode
+            end
+        })
 
-    -- Telescope fuzzy finder
-    use({
-      'nvim-telescope/telescope.nvim',
-      requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' },
-      config = function()
-        require('vima.plugins.telescope')
-      end,
-    })
+        use({
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            after = { 'nvim-treesitter' },
+        })
 
-    -- auto pairs
-    use({
-      'windwp/nvim-autopairs',
-      config = function()
-        require('vima.plugins.autopairs')
-      end,
-    })
+        use({
+            'JoosepAlviste/nvim-ts-context-commentstring',
+            after = { 'nvim-treesitter' },
+        })
 
-    use({
-      'numToStr/Comment.nvim',
-      after = { 'nvim-ts-context-commentstring' },
-      config = function()
-        require('vima.plugins.comment')
-      end,
-    })
+        -- context aware commenting
+        use({
+            'numToStr/Comment.nvim',
+            after = { 'nvim-ts-context-commentstring' },
+            config = function()
+                require('vima.plugins.comment')
+            end,
+        })
 
-    -- Automatically set up your configuration after cloning packer.nvim
-    if PACKER_BOOTSTRAP then
-      vim.cmd('hi clear Pmenu')
-      packer.sync()
-    end
-  end,
-  config = {
-    display = {
-      -- Have packer use a popup window
-      open_fn = function()
-        return require('packer.util').float({ border = 'rounded' })
-      end,
+        -- Surround
+        use({
+            "kylechui/nvim-surround",
+            tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+            config = function()
+                require("nvim-surround").setup({
+                    -- Configuration here, or leave empty to use defaults
+                })
+            end
+        })
+
+        use({
+            'rlane/pounce.nvim',
+            config = function()
+                require('vima.plugins.pounce')
+            end
+        })
+
+        -- Automatically set up your configuration after cloning packer.nvim
+        if PACKER_BOOTSTRAP then
+            vim.cmd('hi clear Pmenu')
+            packer.sync()
+        end
+    end,
+    config = {
+        display = {
+            open_fn = function()
+                return require('packer.util').float({ border = 'rounded' })
+            end,
+        },
     },
-  },
 })
