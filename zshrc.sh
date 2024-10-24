@@ -183,10 +183,11 @@ myzsh_activate_antigen() {
 		if [ $MACHINE_TYPE = "Mac" ]; then
 			antigen bundle macos
 		fi
-		antigen bundle git
 		antigen bundle zsh-users/zsh-autosuggestions
 		antigen bundle zsh-users/zsh-syntax-highlighting
 		antigen bundle zsh-users/zsh-history-substring-search
+		antigen bundle git
+		antigen bundle tmux
 		antigen bundle vi-mode
 		antigen apply
 
