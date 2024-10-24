@@ -385,4 +385,7 @@ myzsh_keybindings
 
 export PATH=$HOME/.local/bin:$PATH
 
+# Aliases
+alias c="clear"
+
 date
