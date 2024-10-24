@@ -187,7 +187,10 @@ myzsh_activate_antigen() {
 		antigen bundle zsh-users/zsh-autosuggestions
 		antigen bundle zsh-users/zsh-syntax-highlighting
 		antigen bundle zsh-users/zsh-history-substring-search
+		antigen bundle vi-mode
 		antigen apply
+
+		bindkey jk vi-cmd-mode
 	fi
 }
 
@@ -319,6 +322,12 @@ myzsh_install_neovim() {
 	myzsh_brew_install_or_upgrade neovim stylua luarocks
 }
 
+myzsh_activate_neovim() {
+	neovim_binary="$HOMEBREW_DIRECTORY/bin/nvim"
+	[ -f "$neovim_binary" ] && export EDITOR="$neovim_binary"
+	true
+}
+
 myzsh_cleanup_neovim() {
 	rm -rf "$MYZSH_INSTALLED_DIR"/nvim/plugin/packer_compiled.lua
 	rm -rf "$HOME"/.config/nvim
@@ -357,6 +366,7 @@ setopt nobeep
 myzsh_activate_homebrew
 myzsh_activate_antigen
 myzsh_activate_cli_tools
+myzsh_activate_neovim
 myzsh_activate_starship
 myzsh_activate_rtx
 myzsh_activate_python
