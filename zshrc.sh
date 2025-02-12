@@ -287,8 +287,7 @@ myzsh_activate_rust() {
 
 myzsh_install_java() {
 	myzsh_install_homebrew
-	brew tap homebrew/cask-versions
-	myzsh_brew_install_or_upgrade --cask temurin17
+	myzsh_brew_install_or_upgrade --cask temurin@21
 	echo "Java version:"
 	java -version
 }
