@@ -186,6 +186,7 @@ myzsh_activate_antigen() {
 		antigen bundle zsh-users/zsh-autosuggestions
 		antigen bundle zsh-users/zsh-syntax-highlighting
 		antigen bundle zsh-users/zsh-history-substring-search
+		antigen bundle zsh-users/zsh-completions
 		antigen bundle git
 		antigen bundle tmux
 		antigen bundle vi-mode
@@ -350,6 +351,21 @@ myzsh_fix_key_repeat_for_vscode() {
 	fi
 }
 
+# Extra completions
+################################################################################
+
+myzsh_activate_extra_completions() {
+	# check if docker is installed
+	if command -v docker &>/dev/null; then
+		# if $DOCKER_DIRECTORY/completions does not exist, create it and add the completion file
+		if [ ! -d "$DOCKER_DIRECTORY/completions" ]; then
+			mkdir -p "$DOCKER_DIRECTORY/completions"
+			docker completion zsh >"$DOCKER_DIRECTORY/completions/_docker"
+		fi
+		FPATH="$DOCKER_DIRECTORY/completions:${FPATH}"
+	fi
+}
+
 # Keybindings
 ################################################################################
 
@@ -376,6 +392,7 @@ myzsh_activate_java
 myzsh_activate_docker
 
 myzsh_keybindings
+myzsh_activate_extra_completions
 
 [ -x "$HOME/.vocab" ] && "$HOME"/.vocab
 
