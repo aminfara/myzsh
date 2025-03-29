@@ -283,6 +283,15 @@ myzsh_activate_rust() {
 	true
 }
 
+# Go
+################################################################################
+
+myzsh_activate_go() {
+	[ -d "$HOME/go" ] && export GOPATH="$HOME/go"
+	[ -d "$HOME/go/bin" ] && export PATH="$HOME/go/bin:$PATH"
+	true
+}
+
 # Java
 ################################################################################
 
@@ -388,6 +397,7 @@ myzsh_activate_rtx
 myzsh_activate_python
 myzsh_activate_node
 myzsh_activate_rust
+myzsh_activate_go
 myzsh_activate_java
 myzsh_activate_docker
 
