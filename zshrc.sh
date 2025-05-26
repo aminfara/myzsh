@@ -132,7 +132,7 @@ myzsh_brew_uninstall() {
 
 myzsh_install_cli_tools() {
 	myzsh_brew_install_or_upgrade openssl readline sqlite3 xz zlib tcl-tk # required for Python build
-	myzsh_brew_install_or_upgrade git wget fd ripgrep fzf htop jq tree tmux lazygit shellcheck shfmt bottom bat
+	myzsh_brew_install_or_upgrade git wget fd ripgrep fzf htop jq yq tree tmux lazygit shellcheck shfmt bottom bat
 	# Install fzf key bindings
 	"$(brew --prefix fzf)/install" --key-bindings --completion --no-update-rc --no-bash --no-fish
 	[ -f "$HOME"/.tmux.conf ] || ln -s "$MYZSH_INSTALLED_DIR"/tmux.conf "$HOME"/.tmux.conf
@@ -141,7 +141,7 @@ myzsh_install_cli_tools() {
 }
 
 myzsh_uninstall_cli_tools() {
-	myzsh_brew_uninstall git wget fd ripgrep fzf htop jq tree tmux lazygit shellcheck shfmt bottom
+	myzsh_brew_uninstall git wget fd ripgrep fzf htop jq yq tree tmux lazygit shellcheck shfmt bottom bat
 	myzsh_brew_uninstall openssl readline sqlite3 xz zlib tcl-tk
 	[ -f "$HOME"/.fzf.zsh ] && rm "$HOME"/.fzf.zsh
 	true
