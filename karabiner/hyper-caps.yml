@@ -1,0 +1,49 @@
+---
+title: HyperCaps
+repo: https://github.com/aminfara/myzsh
+version: 1.0.0
+
+rules:
+  # Activate HyperCaps
+  ################################################################
+
+  - description: Activate HyperCaps
+    manipulators:
+      - description: 'capslock = HyperCaps mode (hold) | escape (tap)'
+        type: basic
+        from: { key_code: caps_lock, modifiers: { optional: [any] } }
+        to_if_held_down: [{ set_variable: { name: hypercaps, value: true } }]
+        to_after_key_up: [{ set_variable: { name: hypercaps, value: false } }]
+        to_if_alone: [{ key_code: escape }]
+        parameters: { basic.to_if_held_down_threshold_milliseconds: 100 }
+
+      - description: 'escape = caps_lock'
+        type: basic
+        from: { key_code: escape, modifiers: { optional: [any] } }
+        to: [{ key_code: caps_lock }]
+
+  - description: HyperCaps h/j/k/l Move
+    manipulators:
+      - description: 'HC + j = down'
+        type: basic
+        conditions: [{ type: variable_if, name: hypercaps, value: true }]
+        from: { key_code: j, modifiers: { optional: [any] } }
+        to: [{ key_code: down_arrow }]
+
+      - description: 'HC + k = up'
+        type: basic
+        conditions: [{ type: variable_if, name: hypercaps, value: true }]
+        from: { key_code: k, modifiers: { optional: [any] } }
+        to: [{ key_code: up_arrow }]
+
+      - description: 'HC + h = left'
+        type: basic
+        conditions: [{ type: variable_if, name: hypercaps, value: true }]
+        from: { key_code: h, modifiers: { optional: [any] } }
+        to: [{ key_code: left_arrow }]
+
+      - description: 'HC + l = right'
+        type: basic
+        conditions: [{ type: variable_if, name: hypercaps, value: true }]
+        from: { key_code: l, modifiers: { optional: [any] } }
+        to: [{ key_code: right_arrow }]
