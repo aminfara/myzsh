@@ -1,39 +1,13 @@
 #!/bin/bash
 
-# Set MACHINE_TYPE
-case $(uname -s) in
-Linux*) MACHINE_TYPE=Linux ;;
-Darwin*)
-	if [ "$(uname -m)" = "arm64" ]; then
-		MACHINE_TYPE=Mac_aarch
-	else
-		MACHINE_TYPE=Mac_x86
-	fi
-	;;
-*) MACHINE_TYPE=Unknown ;;
-esac
-
-# If the MACHINE_TYPE is Unknown exit
-if [ $MACHINE_TYPE = "Unknown" ]; then
-	echo "Machine type '$MACHINE_TYPE' is not supported."
-	exit 1
-fi
-
-# Set HOMEBREW_DIRECTORY based on MACHINE_TYPE
-case $MACHINE_TYPE in
-Mac_aarch) export HOMEBREW_DIRECTORY=/opt/homebrew ;;
-Mac_x86) export HOMEBREW_DIRECTORY=/usr/local ;;
-Linux) export HOMEBREW_DIRECTORY=/home/linuxbrew/.linuxbrew ;;
-esac
-
 # CONFIGURATIONS
 ################################################################################
 
+export HOMEBREW_DIRECTORY="/opt/homebrew"
 export MYZSH_INSTALLED_DIR=$HOME/.myzsh
 export ANTIGEN_DIRECTORY=$HOME/.antigen
 export DOCKER_DIRECTORY="$HOME/.docker"
 export N_PREFIX="$HOME/.n"
-export NPM_DIRECTORY=$HOME/.npm
 
 # SET PARAMETERS
 ################################################################################
@@ -48,28 +22,6 @@ print_line() {
 	echo
 	echo "$@"
 	echo "--------------------------------------------------------------------------------"
-}
-
-myzsh_install_linux_build_essentials() {
-	print_line "Installing Linux build essentials"
-	if command -v "yum" &>/dev/null; then
-		# AL2
-		sudo yum -y groups install "buildsys-build"
-		sudo yum -y groups install "Development Tools"
-		# python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Fedora)
-		sudo yum -y install zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl11-devel xz xz-devel libffi-devel findutils
-		# Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
-		sudo yum -y install procps-ng curl file git
-	fi
-
-	if command -v "apt" &>/dev/null; then
-		# Ubuntu
-		sudo apt update
-		# Homebrew on Linux https://docs.brew.sh/Homebrew-on-Linux
-		sudo apt install build-essential procps curl file git python3-pip vim
-		# python-build https://github.com/pyenv/pyenv/wiki#suggested-build-environment (Ubuntu)
-		sudo apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-	fi
 }
 
 # Homebrew
@@ -94,9 +46,6 @@ myzsh_is_homebrew_installed() {
 
 myzsh_install_homebrew() {
 	if ! myzsh_is_homebrew_installed; then
-		if [ "$MACHINE_TYPE" = Linux ]; then
-			myzsh_install_linux_build_essentials
-		fi
 		print_line "Installing homebrew"
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		myzsh_activate_homebrew
@@ -180,9 +129,7 @@ myzsh_activate_antigen() {
 		source "$ANTIGEN_EXEC_DIRECTORY"/antigen.zsh
 		antigen use oh-my-zsh
 		antigen bundle key-bindings
-		if [ $MACHINE_TYPE = "Mac" ]; then
-			antigen bundle macos
-		fi
+		antigen bundle macos
 		antigen bundle zsh-users/zsh-autosuggestions
 		antigen bundle zsh-users/zsh-syntax-highlighting
 		antigen bundle zsh-users/zsh-history-substring-search
@@ -364,9 +311,8 @@ myzsh_uninstall_neovim() {
 ################################################################################
 
 myzsh_fix_key_repeat_for_vscode() {
-	if [ ! $MACHINE_TYPE = Linux ]; then
-		defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-	fi
+	# Disable key repeat for VSCode
+	defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 }
 
 # Extra completions

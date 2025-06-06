@@ -2,7 +2,7 @@
   "bundleId" : "com.knollsoft.Rectangle",
   "defaults" : {
     "SUEnableAutomaticChecks" : {
-      "bool" : false
+      "bool" : true
     },
     "allowAnyShortcut" : {
       "bool" : false
@@ -212,7 +212,7 @@
 
     },
     "todo" : {
-      "int" : 0
+      "int" : 2
     },
     "todoApplication" : {
 
@@ -274,5 +274,5 @@
       "modifierFlags" : 786432
     }
   },
-  "version" : "92"
+  "version" : "93"
 }
