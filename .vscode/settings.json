@@ -1,3 +1,12 @@
 {
-  "cSpell.words": ["capslock", "hypercaps"]
+  "cSpell.words": [
+    "capslock",
+    "fpath",
+    "hypercaps",
+    "libexec",
+    "myzsh",
+    "SAVEHIST",
+    "shellenv",
+    "zhistory"
+  ]
 }

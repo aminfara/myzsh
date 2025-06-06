@@ -2,6 +2,7 @@ tags
 tmp
 .venv
 .zshrc.swp
+.zsh_history
 automatic_backups
 packer_compiled.lua
 __pycache__
