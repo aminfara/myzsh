@@ -365,6 +365,7 @@ myzsh_activate_extra_completions
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
 export PATH=$HOME/.local/bin:$PATH
+export PAGER="less -FMiX"
 
 # Aliases
 alias c="clear"
