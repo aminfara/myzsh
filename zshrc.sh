@@ -192,7 +192,7 @@ myzsh_install_python() {
 	print_line "Installing python $1"
 	pyenv install "$1"
 	pyenv global "$1"
-	myzsh_activate_pyenv
+	myzsh_activate_python
 	python3 -m pip install --upgrade pip
 	echo "Python version:"
 	python --version
