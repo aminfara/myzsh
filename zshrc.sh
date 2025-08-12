@@ -251,6 +251,14 @@ myzsh_activate_rust() {
 	true
 }
 
+# Flutter
+################################################################################
+
+myzsh_activate_flutter() {
+	[ -d "$HOME/flutter" ] && export PATH="$HOME/flutter/bin:$PATH"
+	true
+}
+
 # Go
 ################################################################################
 
@@ -365,6 +373,7 @@ myzsh_activate_python
 myzsh_activate_node
 myzsh_activate_ruby
 myzsh_activate_rust
+myzsh_activate_flutter
 myzsh_activate_go
 myzsh_activate_java
 myzsh_activate_docker
