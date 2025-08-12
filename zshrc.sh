@@ -230,6 +230,18 @@ myzsh_activate_node() {
 	true
 }
 
+# Ruby
+################################################################################
+
+myzsh_activate_ruby() {
+	if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+		export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+		gemdir=$(/opt/homebrew/opt/ruby/bin/gem environment gemdir)
+		export PATH=$gemdir/bin:$PATH
+	fi
+	true
+}
+
 # Rust
 ################################################################################
 
@@ -351,6 +363,7 @@ myzsh_activate_starship
 myzsh_activate_rtx
 myzsh_activate_python
 myzsh_activate_node
+myzsh_activate_ruby
 myzsh_activate_rust
 myzsh_activate_go
 myzsh_activate_java
