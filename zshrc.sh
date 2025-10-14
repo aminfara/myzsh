@@ -219,14 +219,23 @@ myzsh_install_node() {
 myzsh_activate_node() {
 	[ -d "$N_PREFIX"/bin ] && export PATH="$N_PREFIX/bin:$PATH"
 	alias nr="npm run"
+	alias nrw="npm run -w"
 	alias nrb="npm run build"
+	alias nrbw="npm run build -w"
 	alias nrc="npm run clean"
+	alias nrcw="npm run clean -w"
 	alias nrd="npm run dev"
+	alias nrdw="npm run dev -w"
 	alias nrl="npm run lint"
+	alias nrlw="npm run lint -w"
 	alias nrf="npm run format"
+	alias nrfw="npm run format -w"
 	alias nrt="npm run test"
+	alias nrtw="npm run test -w"
 	alias ni="npm install"
+	alias niw="npm install -w"
 	alias nid="npm install --save-dev"
+	alias nidw="npm install --save-dev -w"
 	true
 }
 
